@@ -29,8 +29,5 @@ float MovingAverageFilter::getWeightedMovingAverage() {
     sum += samples_[i] * weight_[i];
     weight_sum += weight_[i];
   }
-  if (weight_sum == 0) {
-   throw std::runtime_error("Weight sum is zero");
-  }
   return (float)sum / weight_sum;
 }

@@ -14,6 +14,12 @@ LineFollower::LineFollower()
   direction = 0;
 }
 
+LineFollower::~LineFollower()
+{
+  delete right_filter_ptr_;
+  delete left_filter_ptr_;
+}
+
 void LineFollower::follow_line()
 {
   if (direction != -1)
@@ -56,18 +62,23 @@ void LineFollower::decide_direction()
 {
   right_sensor_value_ = analogRead(RIGHT_LINE_SENSOR_PIN);
   left_sensor_value_ = analogRead(LEFT_LINE_SENSOR_PIN);
-  if ((right_sensor_value_ <= LINE_SENSOR_THRESHOLD) && 
-  (left_sensor_value_ <= LINE_SENSOR_THRESHOLD))
+  right_filter_ptr_->addSample(right_sensor_value_);
+  left_filter_ptr_->addSample(left_sensor_value_);
+  right_sensor_mean_value_ = right_filter_ptr_->getWeightedMovingAverage();
+  left_sensor_mean_value_ = left_filter_ptr_->getWeightedMovingAverage();
+  left_sensor_mean_value_;
+  if ((right_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD) && 
+  (left_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD))
   {
     direction = 0;
   }
-  else if ((right_sensor_value_ > LINE_SENSOR_THRESHOLD) && 
-  (left_sensor_value_ <= LINE_SENSOR_THRESHOLD))
+  else if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) && 
+  (left_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD))
   {
     direction = 1;
   }
-  else if ((right_sensor_value_ <= LINE_SENSOR_THRESHOLD) && 
-  (left_sensor_value_ > LINE_SENSOR_THRESHOLD))
+  else if ((right_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD) && 
+  (left_sensor_mean_value_ > LINE_SENSOR_THRESHOLD))
   {
     direction = 2;
   }
@@ -79,8 +90,8 @@ void LineFollower::decide_direction()
 
 void LineFollower::go_straight()
 {
-  g_right_motor.setSpeed(150);
-  g_left_motor.setSpeed(150);
+  g_right_motor.setSpeed(HIGH_MOTOR_SPEED);
+  g_left_motor.setSpeed(HIGH_MOTOR_SPEED);
   g_right_motor.run(FORWARD);
   g_left_motor.run(FORWARD);
   previous_direction = 0;
@@ -88,8 +99,8 @@ void LineFollower::go_straight()
 
 void LineFollower::turn_right()
 {
-  g_right_motor.setSpeed(100);
-  g_left_motor.setSpeed(150);
+  g_right_motor.setSpeed(LOW_MOTOR_SPEED);
+  g_left_motor.setSpeed(HIGH_MOTOR_SPEED);
   g_right_motor.run(BACKWARD);
   g_left_motor.run(FORWARD);
   previous_direction = 1;
@@ -97,8 +108,8 @@ void LineFollower::turn_right()
 
 void LineFollower::turn_left()
 {
-  g_right_motor.setSpeed(150);
-  g_left_motor.setSpeed(100);
+  g_right_motor.setSpeed(HIGH_MOTOR_SPEED);
+  g_left_motor.setSpeed(LOW_MOTOR_SPEED);
   g_right_motor.run(FORWARD);
   g_left_motor.run(BACKWARD);
   previous_direction = 2;

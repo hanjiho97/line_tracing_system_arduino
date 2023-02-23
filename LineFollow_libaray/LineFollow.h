@@ -11,12 +11,18 @@
 #define LEFT_MOTOR_NUMBER 4
 
 #define LINE_SENSOR_THRESHOLD 500
+#define HIGH_MOTOR_SPEED 150
+#define LOW_MOTOR_SPEED 100
 
 class LineFollower
 {
 private:
+  MovingAverageFilter *right_filter_ptr_;
+  MovingAverageFilter *left_filter_ptr_;
   uint16_t right_sensor_value_;
   uint16_t left_sensor_value_;
+  float right_sensor_mean_value_;
+  float left_sensor_mean_value_;
   int8_t direction;
   int8_t previous_direction;
 public:

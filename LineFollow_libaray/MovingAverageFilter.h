@@ -16,9 +16,9 @@ public:
   float getMovingAverage();
 
 private:
-  const int kSampleSize_;
+  const uint8_t kSampleSize_;
   std::deque<int> samples_;
-  std::vector<int> weight_;
+  std::vector<uint8_t> weight_;
 };
 
 #endif  // MOVING_AVERAGE_FILTER_H_
