@@ -27,7 +27,7 @@ private:
   int8_t previous_direction;
 public:
   LineFollower();
-  virtual ~LineFollower() {};
+  ~LineFollower() {};
   void follow_line();
   void decide_direction();
   void go_straight();
