@@ -7,13 +7,16 @@
 #define RIGHT_LINE_SENSOR_PIN A5
 #define LEFT_LINE_SENSOR_PIN A0
 #define RIGHT_MOTOR_NUMBER 1
-#define LEFT_MOTOR_NUMBER 2
+#define LEFT_MOTOR_NUMBER 4
 
 class LineFollower
 {
 private:
-  uint8_t right_sensor_value_;
-  uint8_t left_sensor_value_;
+  uint16_t right_sensor_value_;
+  uint16_t left_sensor_value_;
+  bool straight_flag;
+  bool right_flag;
+  bool left_flag;
 public:
   LineFollower();
   virtual ~LineFollower() {};
