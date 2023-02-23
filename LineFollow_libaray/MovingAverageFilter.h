@@ -1,6 +1,10 @@
 #ifndef MOVINGAVERAGEFILTER_H_
 #define MOVINGAVERAGEFILTER_H_
 
+#include <ArduinoSTL.h>
+#include <vector>
+#include <deque>
+
 class MovingAverageFilter final 
 {
 public:

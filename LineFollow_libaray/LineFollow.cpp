@@ -2,7 +2,7 @@
 
 enum DIRECTION
 {
-  STRAGIT,
+  STRAGHIT,
   RIGHT,
   LEFT,
   NONE
@@ -35,7 +35,7 @@ void LineFollower::follow_line()
 {
   switch(direction)
   {
-    case DIRECTION::STRAIGHT:
+    case DIRECTION::STRAGHIT:
       go_straight();
       break;
     case DIRECTION::RIGHT:
@@ -46,7 +46,7 @@ void LineFollower::follow_line()
       break;
     case DIRECTION::NONE:
       maintain_direction();
-      break
+      break;
     default:
       break;
   }
@@ -56,7 +56,7 @@ void LineFollower::maintain_direction()
 {
   switch(previous_direction)
   {
-    case DIRECTION::STRAIGHT:
+    case DIRECTION::STRAGHIT:
       go_straight();
       break;
     case DIRECTION::RIGHT:
@@ -74,10 +74,10 @@ void LineFollower::decide_direction()
 {
   right_sensor_value_ = analogRead(RIGHT_LINE_SENSOR_PIN);
   left_sensor_value_ = analogRead(LEFT_LINE_SENSOR_PIN);
-  right_filter_ptr_->addSample(right_sensor_value_);
-  left_filter_ptr_->addSample(left_sensor_value_);
-  right_sensor_mean_value_ = right_filter_ptr_->getWeightedMovingAverage();
-  left_sensor_mean_value_ = left_filter_ptr_->getWeightedMovingAverage();
+  right_filter_ptr_->add_sample(right_sensor_value_);
+  left_filter_ptr_->add_sample(left_sensor_value_);
+  right_sensor_mean_value_ = right_filter_ptr_->get_weighted_moving_average();
+  left_sensor_mean_value_ = left_filter_ptr_->get_weighted_moving_average();
   left_sensor_mean_value_;
   if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) && 
   (left_sensor_mean_value_ > LINE_SENSOR_THRESHOLD))
