@@ -5,8 +5,8 @@ AF_DCMotor g_left_motor(LEFT_MOTOR_NUMBER);
 
 LineFollower::LineFollower()
 {
-  g_right_motor.setSpeed(150);
-  g_left_motor.setSpeed(150);
+  g_right_motor.setSpeed(HIGH_MOTOR_SPEED);
+  g_left_motor.setSpeed(HIGH_MOTOR_SPEED);
   g_right_motor.run(RELEASE);
   g_left_motor.run(RELEASE);
   pinMode(RIGHT_LINE_SENSOR_PIN, INPUT);
