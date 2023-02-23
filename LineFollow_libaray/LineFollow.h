@@ -3,24 +3,30 @@
 
 #include <Arduino.h>
 #include <AFMotor.h>
+#include "MovingAverageFilter.h"
 
 #define RIGHT_LINE_SENSOR_PIN A5
 #define LEFT_LINE_SENSOR_PIN A0
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
+#define LINE_SENSOR_THRESHOLD 500
+
 class LineFollower
 {
 private:
   uint16_t right_sensor_value_;
   uint16_t left_sensor_value_;
-  bool straight_flag;
-  bool right_flag;
-  bool left_flag;
+  int8_t direction;
+  int8_t previous_direction;
 public:
   LineFollower();
   virtual ~LineFollower() {};
   void follow_line();
+  void decide_direction();
+  void go_straight();
+  void turn_left();
+  void turn_right();
 };
 
 #endif
