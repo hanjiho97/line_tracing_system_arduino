@@ -33,6 +33,7 @@ LineFollower::~LineFollower()
 
 void LineFollower::follow_line()
 {
+  decide_direction();
   switch(direction)
   {
     case DIRECTION::STRAGHIT:
@@ -82,21 +83,21 @@ void LineFollower::decide_direction()
   if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) && 
   (left_sensor_mean_value_ > LINE_SENSOR_THRESHOLD))
   {
-    direction = 0;
+    direction = DIRECTION::STRAGHIT;
   }
   else if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) && 
   (left_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD))
   {
-    direction = 1;
+    direction = DIRECTION::RIGHT;
   }
   else if ((right_sensor_mean_value_ <= LINE_SENSOR_THRESHOLD) && 
   (left_sensor_mean_value_ > LINE_SENSOR_THRESHOLD))
   {
-    direction = 2;
+    direction = DIRECTION::LEFT;
   }
   else
   {
-    direction = 3;
+    direction = DIRECTION::NONE;
   }
 }
 
@@ -106,7 +107,7 @@ void LineFollower::go_straight()
   left_motor_->setSpeed(HIGH_MOTOR_SPEED);
   right_motor_->run(FORWARD);
   left_motor_->run(FORWARD);
-  previous_direction = 0;
+  previous_direction = DIRECTION::STRAGHIT;
 }
 
 void LineFollower::turn_right()
@@ -115,7 +116,7 @@ void LineFollower::turn_right()
   left_motor_->setSpeed(HIGH_MOTOR_SPEED);
   right_motor_->run(BACKWARD);
   left_motor_->run(FORWARD);
-  previous_direction = 1;
+  previous_direction = DIRECTION::RIGHT;
 }
 
 void LineFollower::turn_left()
@@ -124,5 +125,5 @@ void LineFollower::turn_left()
   left_motor_->setSpeed(LOW_MOTOR_SPEED);
   right_motor_->run(FORWARD);
   left_motor_->run(BACKWARD);
-  previous_direction = 2;
+  previous_direction = DIRECTION::LEFT;
 }
