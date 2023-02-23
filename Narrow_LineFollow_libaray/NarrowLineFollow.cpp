@@ -73,26 +73,28 @@ void NarrowLineFollower::follow_line()
   }
   else if ((!right_state) && (!left_state))
   {
-    if (straight_flag)
+    int seed = random(3);
+    if (seed == 0)
     {
       g_right_motor.setSpeed(200);
       g_left_motor.setSpeed(200);
-      g_right_motor.run(FORWARD);
-      g_left_motor.run(FORWARD);
-    }
-    else if (right_flag)
-    {
-      g_right_motor.setSpeed(150);
-      g_left_motor.setSpeed(150);
-      g_right_motor.run(FORWARD);
+      g_right_motor.run(BACKWARD);
       g_left_motor.run(BACKWARD);
     }
-    else if (left_flag)
+    else if (seed == 1)
     {
       g_right_motor.setSpeed(150);
       g_left_motor.setSpeed(150);
       g_right_motor.run(BACKWARD);
       g_left_motor.run(FORWARD);
     }
+    else if (seed == 2)
+    {
+      g_right_motor.setSpeed(150);
+      g_left_motor.setSpeed(150);
+      g_right_motor.run(FORWARD);
+      g_left_motor.run(BACKWARD);
+    }
+    delay(50);
   }
 }
