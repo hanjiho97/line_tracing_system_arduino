@@ -21,6 +21,7 @@ public:
   NarrowLineFollower();
   virtual ~NarrowLineFollower() {};
   void follow_line();
+  bool check_line();
 };
 
 #endif

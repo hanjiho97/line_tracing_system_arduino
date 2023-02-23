@@ -15,7 +15,12 @@ NarrowLineFollower::NarrowLineFollower()
   pinMode(RIGHT_LINE_SENSOR_PIN, INPUT);
   pinMode(LEFT_LINE_SENSOR_PIN, INPUT);
 }
+bool NarrowLineFollower::check_line(){
 
+  right_sensor_value_ = analogRead(RIGHT_LINE_SENSOR_PIN);
+  left_sensor_value_ = analogRead(LEFT_LINE_SENSOR_PIN);
+  return (left_sensor_value_ > 500) && (right_sensor_value_ > 500);
+}
 void NarrowLineFollower::follow_line()
 {
   right_sensor_value_ = analogRead(RIGHT_LINE_SENSOR_PIN);
@@ -25,8 +30,8 @@ void NarrowLineFollower::follow_line()
   if ((right_state) && (left_state))
   {
     // forward
-    g_right_motor.setSpeed(150);
-    g_left_motor.setSpeed(150);
+    g_right_motor.setSpeed(200);
+    g_left_motor.setSpeed(200);
     g_right_motor.run(FORWARD);
     g_left_motor.run(FORWARD);
     straight_flag = true;
@@ -36,30 +41,42 @@ void NarrowLineFollower::follow_line()
   else if ((right_state) && (!left_state))
   {
     // right
-    g_right_motor.setSpeed(150);
-    g_left_motor.setSpeed(100);
-    g_right_motor.run(FORWARD);
-    g_left_motor.run(BACKWARD);
-    straight_flag = false;
-    right_flag = true;
-    left_flag = false;
+      g_right_motor.setSpeed(150);
+      g_left_motor.setSpeed(150);
+      g_right_motor.run(FORWARD);
+      g_left_motor.run(BACKWARD);
+      straight_flag = false;
+      right_flag = true;
+      left_flag = false;
+      while (true)
+      {
+        // delay(10);
+        if (check_line())
+          break;
+      }
   }
   else if ((!right_state) && (left_state))
   {
-    g_right_motor.setSpeed(100);
+    g_right_motor.setSpeed(150);
     g_left_motor.setSpeed(150);
     g_right_motor.run(BACKWARD);
     g_left_motor.run(FORWARD);
     straight_flag = false;
     right_flag = false;
     left_flag = true;
+    while (true)
+    {
+        // delay(10);
+        if (check_line())
+          break;
+    }
   }
   else if ((!right_state) && (!left_state))
   {
     if (straight_flag)
     {
-      g_right_motor.setSpeed(150);
-      g_left_motor.setSpeed(150);
+      g_right_motor.setSpeed(200);
+      g_left_motor.setSpeed(200);
       g_right_motor.run(FORWARD);
       g_left_motor.run(FORWARD);
     }
