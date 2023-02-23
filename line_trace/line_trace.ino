@@ -1,6 +1,6 @@
-#include <LineFollow.h>
+#include <NarrowLineFollow.h>
 
-LineFollower line_module;
+NarrowLineFollower line_module;
 
 void setup() 
 {
