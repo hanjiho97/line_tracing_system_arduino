@@ -1,15 +1,17 @@
 #ifndef _DECISION_MAKER_H_
 #define _DECISION_MAKER_H_
 
-// #include "behavior_state_machine.h"
+#include "behavior_state_machine.h"
 #include "line_follower.h"
-#include "init_state.h"
-#include "stop_state.h"
-#include "forward_state.h"
+// #include "init_state.h"
+// #include "stop_state.h"
+// #include "forward_state.h"
 #include "common_params.h"
 
 #include <ArduinoSTL.h>
 #include <vector>
+
+class BehaviorStateMachine;
 
 class DecisionMaker
 {
@@ -29,6 +31,11 @@ public:
   LineFollower& get_line_follower()
   {
     return line_follower_;
+  }
+
+  SensorData& get_sensor_data()
+  {
+    return sensor_data_;
   }
 
 protected:

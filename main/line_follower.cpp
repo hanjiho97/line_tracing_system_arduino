@@ -22,9 +22,9 @@ LineFollower::~LineFollower()
   delete left_filter_ptr_;
 }
 
-void LineFollower::follow_line()
+void LineFollower::follow_line(uint16_t right_sensor_value, uint16_t left_sensor_value)
 {
-  decide_direction();
+  decide_direction(right_sensor_value, left_sensor_value);
   switch (direction)
   {
   case DIRECTION::STRAGHIT:
@@ -62,12 +62,10 @@ void LineFollower::maintain_direction()
   }
 }
 
-void LineFollower::decide_direction()
+void LineFollower::decide_direction(uint16_t right_sensor_value, uint16_t left_sensor_value)
 {
-  right_sensor_value_ = analogRead(RIGHT_LINE_SENSOR_PIN);
-  left_sensor_value_ = analogRead(LEFT_LINE_SENSOR_PIN);
-  right_filter_ptr_->add_sample(right_sensor_value_);
-  left_filter_ptr_->add_sample(left_sensor_value_);
+  right_filter_ptr_->add_sample(right_sensor_value);
+  left_filter_ptr_->add_sample(left_sensor_value);
   right_sensor_mean_value_ = right_filter_ptr_->get_weighted_moving_average();
   left_sensor_mean_value_ = left_filter_ptr_->get_weighted_moving_average();
   if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) &&
