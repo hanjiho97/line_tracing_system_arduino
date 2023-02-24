@@ -10,8 +10,8 @@ enum DIRECTION
 
 LineFollower::LineFollower()
 {
-  right_motor_ = new AF_DCMotor(RIGHT_LINE_SENSOR_PIN);
-  left_motor_ = new AF_DCMotor(LEFT_LINE_SENSOR_PIN);
+  right_motor_ = new AF_DCMotor(RIGHT_MOTOR_NUMBER);
+  left_motor_ = new AF_DCMotor(LEFT_MOTOR_NUMBER);
   right_motor_->setSpeed(HIGH_MOTOR_SPEED);
   left_motor_->setSpeed(HIGH_MOTOR_SPEED);
   right_motor_->run(RELEASE);
@@ -79,7 +79,6 @@ void LineFollower::decide_direction()
   left_filter_ptr_->add_sample(left_sensor_value_);
   right_sensor_mean_value_ = right_filter_ptr_->get_weighted_moving_average();
   left_sensor_mean_value_ = left_filter_ptr_->get_weighted_moving_average();
-  left_sensor_mean_value_;
   if ((right_sensor_mean_value_ > LINE_SENSOR_THRESHOLD) && 
   (left_sensor_mean_value_ > LINE_SENSOR_THRESHOLD))
   {
@@ -113,17 +112,17 @@ void LineFollower::go_straight()
 void LineFollower::turn_right()
 {
   right_motor_->setSpeed(LOW_MOTOR_SPEED);
-  left_motor_->setSpeed(HIGH_MOTOR_SPEED);
-  right_motor_->run(BACKWARD);
-  left_motor_->run(FORWARD);
+  left_motor_->setSpeed(LOW_MOTOR_SPEED);
+  right_motor_->run(FORWARD);
+  left_motor_->run(BACKWARD);
   previous_direction = DIRECTION::RIGHT;
 }
 
 void LineFollower::turn_left()
 {
-  right_motor_->setSpeed(HIGH_MOTOR_SPEED);
+  right_motor_->setSpeed(LOW_MOTOR_SPEED);
   left_motor_->setSpeed(LOW_MOTOR_SPEED);
-  right_motor_->run(FORWARD);
-  left_motor_->run(BACKWARD);
+  right_motor_->run(BACKWARD);
+  left_motor_->run(FORWARD);
   previous_direction = DIRECTION::LEFT;
 }

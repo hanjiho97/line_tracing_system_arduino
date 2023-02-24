@@ -32,7 +32,7 @@ float MovingAverageFilter::get_moving_average()
 
 float MovingAverageFilter::get_weighted_moving_average() 
 {
-  uint16_t sum = 0;
+  uint32_t sum = 0;
   uint16_t weight_sum = 0;
   for (uint8_t i = 0U; i < samples_.size(); ++i) 
   {

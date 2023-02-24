@@ -20,7 +20,7 @@ public:
 private:
   const uint8_t kSampleSize_;
   std::deque<uint16_t> samples_;
-  std::vector<uint8_t> weight_;
+  std::vector<uint16_t> weight_;
 };
 
 #endif  // MOVING_AVERAGE_FILTER_H_

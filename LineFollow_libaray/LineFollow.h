@@ -11,10 +11,10 @@
 #define LEFT_MOTOR_NUMBER 4
 
 #define LINE_SENSOR_THRESHOLD 500
-#define HIGH_MOTOR_SPEED 150
-#define LOW_MOTOR_SPEED 100
+#define HIGH_MOTOR_SPEED 250
+#define LOW_MOTOR_SPEED 200
 
-#define NUMBER_OF_SAMPLES 10
+#define NUMBER_OF_SAMPLES 1
 
 class LineFollower
 {
@@ -29,6 +29,7 @@ private:
   float left_sensor_mean_value_;
   int8_t direction;
   int8_t previous_direction;
+  int8_t ramdom_direction;
 public:
   LineFollower();
   virtual ~LineFollower();
