@@ -4,7 +4,7 @@
 #include <ArduinoSTL.h>
 
 // for debugging
-#define _PF_ (__PRETTY_FUNCTION__) 
+#define _PF_ (__PRETTY_FUNCTION__)
 
 #define INIT_SPEED 150
 
@@ -22,6 +22,23 @@
 #define LOW_MOTOR_SPEED 100
 
 #define NUMBER_OF_SAMPLES 10
+
+#define START_WAIT_TIME_MS 3000
+
+enum STATE_TYPE
+{
+  INVALID_STATE = -1,
+  INIT,
+  STOP, // main decision state
+  FORWARD,
+  PARKING,
+  AVOIDANCE,
+  COLLISION_STOP,
+  THEFT_EMERGENCY,
+  EMERGENCY_STOP,
+  DONE,
+  NUM_STATES
+};
 
 struct SensorData
 {
