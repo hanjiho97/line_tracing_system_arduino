@@ -12,7 +12,7 @@ STATE_TYPE InitState::get_next_state()
     return find_behavior_state(STATE_TYPE::STOP);
 }
 
-bool InitState::run()
+bool InitState::run(const DecisionMaker& decision_maker, MotorOuput& motor_output)
 {
   // std::cout << _PF_ << " Ready..." << std::endl;
   // std::cout << " Ready..." << std::endl;

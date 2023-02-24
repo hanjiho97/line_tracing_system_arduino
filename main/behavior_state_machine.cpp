@@ -42,7 +42,7 @@ STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE& behavior)
   return STATE_TYPE::INVALID_STATE;
 }
 
-bool BehaviorStateMachine::run()
+bool BehaviorStateMachine::run(const DecisionMaker& decision_maker, MotorOuput& motor_output)
 {
   // std::cout << _PF_ << "run" << std::endl;
   return true;

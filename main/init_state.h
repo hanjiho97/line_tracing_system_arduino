@@ -2,6 +2,7 @@
 #define _INIT_STATE_H_
 
 #include "behavior_state_machine.h"
+#include "decision_maker.h"
 #include "common_params.h"
 
 #include <ArduinoSTL.h>
@@ -16,7 +17,7 @@ public:
   }
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run();
+  virtual bool run(const DecisionMaker& decision_maker, MotorOuput& motor_output);
 };
 
 #endif

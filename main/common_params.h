@@ -2,6 +2,7 @@
 #define _COMMON_PARAMS_H_
 
 #include <ArduinoSTL.h>
+#include <AFMotor.h>
 
 // for debugging
 #define _PF_ __PRETTY_FUNCTION__
@@ -37,7 +38,7 @@ enum STATE_TYPE
   INVALID_STATE = -1,
   INIT,
   STOP, // main decision state
-  FORWARD,
+  LINE_FOLLOW,
   PARKING,
   AVOIDANCE,
   COLLISION_STOP,
@@ -65,6 +66,14 @@ struct SensorData
   uint16_t collision_value_;
 
   uint32_t current_time_;
+};
+
+struct MotorOuput
+{
+  uint8_t right_motor_speed_;
+  uint8_t left_motor_speed_;
+  uint8_t right_motor_mode_;
+  uint8_t left_motor_mode_;
 };
 
 #endif

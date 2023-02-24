@@ -23,14 +23,15 @@ class LineFollower
 private:
   MovingAverageFilter *right_filter_ptr_;
   MovingAverageFilter *left_filter_ptr_;
-  AF_DCMotor *right_motor_;
-  AF_DCMotor *left_motor_;
+  
   uint16_t right_sensor_value_;
   uint16_t left_sensor_value_;
   float right_sensor_mean_value_;
   float left_sensor_mean_value_;
   int8_t direction;
   int8_t previous_direction;
+
+  MotorOuput motor_output_;
 
 public:
   LineFollower();
@@ -41,6 +42,11 @@ public:
   void go_straight();
   void turn_left();
   void turn_right();
+
+  inline MotorOuput get_motor_output()
+  {
+    return motor_output_;
+  }
 };
 
 #endif
