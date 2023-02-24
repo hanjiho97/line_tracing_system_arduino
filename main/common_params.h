@@ -31,7 +31,7 @@
 #define LOW_MOTOR_SPEED 100
 
 // state related paramters
-#define START_WAIT_TIME_MS 3000
+#define START_WAIT_TIME_MS 5000
 
 enum STATE_TYPE
 {
