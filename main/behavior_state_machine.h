@@ -2,10 +2,11 @@
 #define _BEHAVIOR_STATE_MACHINE_H_
 
 #include "common_params.h"
-#include "decision_maker.h"
 
 #include <ArduinoSTL.h>
 #include <vector>
+
+class DecisionMaker;
 
 class BehaviorStateMachine
 {
@@ -22,7 +23,7 @@ public:
   virtual void init();
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine* next_state);
-  virtual bool run(const DecisionMaker& decision_maker, MotorOuput& motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOuput& motor_output);
 
   STATE_TYPE find_behavior_state(const STATE_TYPE& behavior);
 

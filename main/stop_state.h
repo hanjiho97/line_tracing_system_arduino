@@ -2,7 +2,6 @@
 #define _STOP_STATE_H_
 
 #include "behavior_state_machine.h"
-#include "decision_maker.h"
 #include <ArduinoSTL.h>
 #include <vector>
 
@@ -15,7 +14,7 @@ public:
   }
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(const DecisionMaker& decision_maker, MotorOuput& motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOuput& motor_output);
 };
 
 #endif

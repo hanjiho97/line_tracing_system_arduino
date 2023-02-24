@@ -1,7 +1,7 @@
 #ifndef _DECISION_MAKER_H_
 #define _DECISION_MAKER_H_
 
-#include "behavior_state_machine.h"
+// #include "behavior_state_machine.h"
 #include "line_follower.h"
 #include "init_state.h"
 #include "stop_state.h"
@@ -18,16 +18,21 @@ public:
   ~DecisionMaker();
 
   void read_sensor_data();
-  void write_control_signal();
+  void write_control_signal(const MotorOuput& motor_output);
   void run();
 
-  inline void
-  set_sensor_data(const SensorData &sensor_data)
+  void set_sensor_data(const SensorData &sensor_data)
   {
     sensor_data_ = sensor_data;
   }
 
+  LineFollower& get_line_follower()
+  {
+    return line_follower_;
+  }
+
 protected:
+  void init_motors();
   void init_sensor_pin();
 
   STATE_TYPE current_state_;

@@ -1,4 +1,4 @@
-#ifndef LINEFOLLOWER_H_
+#ifndef _LINE_FOLLOWER_H
 #define _LINE_FOLLOWER_H
 
 #include "common_params.h"
@@ -6,17 +6,6 @@
 
 #include <Arduino.h>
 #include <AFMotor.h>
-
-// #define RIGHT_LINE_SENSOR_PIN A5
-// #define LEFT_LINE_SENSOR_PIN A0
-// #define RIGHT_MOTOR_NUMBER 1
-// #define LEFT_MOTOR_NUMBER 4
-
-// #define LINE_SENSOR_THRESHOLD 500
-// #define HIGH_MOTOR_SPEED 150
-// #define LOW_MOTOR_SPEED 100
-
-// #define NUMBER_OF_SAMPLES 10
 
 class LineFollower
 {
