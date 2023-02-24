@@ -13,7 +13,7 @@ public:
   {
   }
   virtual ~InitState() {}
-  virtual BehaviorStateMachine *get_next_state();
+  virtual STATE_TYPE get_next_state();
   virtual bool run();
 };
 

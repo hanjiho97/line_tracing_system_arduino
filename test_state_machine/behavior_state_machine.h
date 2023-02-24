@@ -28,7 +28,7 @@ public:
   }
   virtual ~BehaviorStateMachine(){};
 
-  virtual BehaviorStateMachine *get_next_state() = 0;
+  virtual STATE_TYPE get_next_state() = 0;
   virtual void init();
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine *next_state);
