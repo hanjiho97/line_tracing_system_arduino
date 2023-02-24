@@ -2,26 +2,51 @@
 #define _COMMON_PARAMS_H_
 
 #include <ArduinoSTL.h>
+#include <AFMotor.h>
 
 // for debugging
-#define _PF_ (__PRETTY_FUNCTION__) 
+#define _PF_ __PRETTY_FUNCTION__
 
 #define INIT_SPEED 150
 
-// sensor pin number
+// both line sensors pin number
 #define RIGHT_LINE_SENSOR_PIN A5
 #define LEFT_LINE_SENSOR_PIN A0
+
+// ir sensor pin number
 #define IR_SENSOR_PIN 9
 
-// motor
+// both motors number
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-//lin_follower class parameter
+#define CLOCK_PIN -1
+
+// line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
+#define NUMBER_OF_SAMPLES 10
+
+// motor control parameters
 #define HIGH_MOTOR_SPEED 150
 #define LOW_MOTOR_SPEED 100
-#define NUMBER_OF_SAMPLES 10
+
+// state related paramters
+#define START_WAIT_TIME_MS 3000
+
+enum STATE_TYPE
+{
+  INVALID_STATE = -1,
+  INIT,
+  STOP, // main decision state
+  LINE_FOLLOW,
+  PARKING,
+  AVOIDANCE,
+  COLLISION_STOP,
+  THEFT_EMERGENCY,
+  EMERGENCY_STOP,
+  DONE,
+  NUM_STATES
+};
 
 struct SensorData
 {
@@ -37,10 +62,18 @@ struct SensorData
   uint16_t line_tracing_right_;
   uint16_t line_tracing_left_;
 
-  uint8_t ir_value_;
+  uint16_t ir_value_;
   uint16_t collision_value_;
 
   uint32_t current_time_;
+};
+
+struct MotorOuput
+{
+  uint8_t right_motor_speed_;
+  uint8_t left_motor_speed_;
+  uint8_t right_motor_mode_;
+  uint8_t left_motor_mode_;
 };
 
 #endif
