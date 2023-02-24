@@ -17,7 +17,7 @@ public:
   ~DecisionMaker();
 
   inline void
-  setSensorData(const SensorData &sensor_data)
+  set_sensor_data(const SensorData &sensor_data)
   {
     sensor_data_ = sensor_data;
   }

@@ -4,25 +4,32 @@
 #include <ArduinoSTL.h>
 
 // for debugging
-#define _PF_ (__PRETTY_FUNCTION__)
+#define _PF_ __PRETTY_FUNCTION__
 
 #define INIT_SPEED 150
 
+// both line sensors pin number
 #define RIGHT_LINE_SENSOR_PIN A5
 #define LEFT_LINE_SENSOR_PIN A0
 
+// ir sensor pin number
+#define IR_SENSOR_PIN 9
+
+// both motors number
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-#define IR_SENSOR_PIN -1
 #define CLOCK_PIN -1
 
+// line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
+#define NUMBER_OF_SAMPLES 10
+
+// motor control parameters
 #define HIGH_MOTOR_SPEED 150
 #define LOW_MOTOR_SPEED 100
 
-#define NUMBER_OF_SAMPLES 10
-
+// state related paramters
 #define START_WAIT_TIME_MS 3000
 
 enum STATE_TYPE
