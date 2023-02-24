@@ -8,7 +8,9 @@
 #define LEFT_LINE_SENSOR_PIN A0
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
-
+#define FORWARD_VEL 255
+#define BACKWARD_VEL 200
+#define TURN_VEL 150
 class NarrowLineFollower
 {
 private:
