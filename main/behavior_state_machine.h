@@ -25,6 +25,7 @@ public:
   virtual void init();
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine *next_state);
+  // virtual void print_state(BehaviorStateMachine *next_state);
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
 
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);

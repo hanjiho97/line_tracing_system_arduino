@@ -63,7 +63,9 @@ STATE_TYPE ForwardState::get_next_state()
 
 bool ForwardState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
 {
-  // std::cout << _PF_ << "run" << std::endl;
+  std::cout << _PF_ << "******************************************" << std::endl;
+  std::cout << _PF_ << "***************FORWARD_STATE**************" << std::endl;
+  std::cout << _PF_ << "******************************************" << std::endl;
 
   LineFollower &line_follower = decision_maker.get_line_follower();
   const SensorData &sensor_data = decision_maker.get_sensor_data();
@@ -96,7 +98,9 @@ bool InitState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
   // std::cout << _PF_ << " Ready..." << std::endl;
   // std::cout << " Ready..." << std::endl;
   // Serial.println("Ready...");
-  std::cout << _PF_ << "run" << std::endl;
+  std::cout << _PF_ << "******************************************" << std::endl;
+  std::cout << _PF_ << "*****************INIT_STATE***************" << std::endl;
+  std::cout << _PF_ << "******************************************" << std::endl;
   return true;
 }
 

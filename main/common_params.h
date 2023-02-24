@@ -48,6 +48,19 @@ enum STATE_TYPE
   NUM_STATES
 };
 
+// const char* STATES_STRING[]
+// {
+//   "INIT_STATE",
+//   "STOP_STATE",
+//   "LINE_FOLLOW_STATE",
+//   "PARKING_STATE",
+//   "AVOIDANCE_STATE",
+//   "COLLISION_STOP_STATE",
+//   "THEFT_EMERGENCY_STATE",
+//   "EMERGENCY_STOP_STATE",
+//   "DONE_STATE"
+// };
+
 struct SensorData
 {
   SensorData()

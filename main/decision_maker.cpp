@@ -62,9 +62,9 @@ void DecisionMaker::run()
   // std::cout << "call current state run... " << static_cast<uint32_t>(current_state_) << std::endl;
   MotorOuput motor_output;
   if (states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output))
-    std::cout << "run success: " << static_cast<uint32_t>(current_state_) << std::endl;
+    std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
   else
-    std::cout << "run failure: " << static_cast<uint32_t>(current_state_) << std::endl;
+    std::cout << "Run Failure: " << static_cast<uint32_t>(current_state_) << std::endl;
 
   write_control_signal(motor_output);
 }
@@ -75,7 +75,7 @@ void DecisionMaker::read_sensor_data()
   sensor_data_.line_tracing_left_ = analogRead(LEFT_LINE_SENSOR_PIN);
   sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
   sensor_data_.collision_value_ = 0; // TODO
-  sensor_data_.current_time_ = millis();
+  sensor_data_.read_time_ = millis();
 }
 
 void DecisionMaker::write_control_signal(const MotorOuput& motor_output)
