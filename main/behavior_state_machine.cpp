@@ -2,12 +2,12 @@
 
 void BehaviorStateMachine::init()
 {
-  time_ = millis();
+  runtime_ = millis();
 }
 
 void BehaviorStateMachine::reset_timer()
 {
-  time_ = millis();
+  runtime_ = millis();
 }
 
 void BehaviorStateMachine::insert_next_state(BehaviorStateMachine *next_state)

@@ -1,6 +1,8 @@
 #ifndef NARROWLINEFOLLOWER_H_
 #define NARROWLINEFOLLOWER_H_
 
+#include "common_params.h"
+
 #include <Arduino.h>
 #include <AFMotor.h>
 

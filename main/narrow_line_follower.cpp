@@ -8,8 +8,8 @@ NarrowLineFollower::NarrowLineFollower()
   straight_flag = false;
   right_flag = false;
   left_flag = false;
-  g_right_motor.setSpeed(150);
-  g_left_motor.setSpeed(150);
+  g_right_motor.setSpeed(INIT_SPEED);
+  g_left_motor.setSpeed(INIT_SPEED);
   g_right_motor.run(RELEASE);
   g_left_motor.run(RELEASE);
   pinMode(RIGHT_LINE_SENSOR_PIN, INPUT);

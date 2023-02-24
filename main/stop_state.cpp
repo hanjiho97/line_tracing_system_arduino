@@ -1,6 +1,6 @@
 #include "stop_state.h"
 
-BehaviorStateMachine *StopState::get_next_state()
+STATE_TYPE StopState::get_next_state()
 {
 
 }

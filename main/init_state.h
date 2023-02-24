@@ -2,6 +2,8 @@
 #define _INIT_STATE_H_
 
 #include "behavior_state_machine.h"
+#include "common_params.h"
+
 #include <ArduinoSTL.h>
 #include <vector>
 
@@ -13,7 +15,7 @@ public:
   {
   }
   virtual ~InitState() {}
-  virtual BehaviorStateMachine *get_next_state();
+  virtual STATE_TYPE get_next_state();
   virtual bool run();
 };
 

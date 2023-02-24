@@ -1,6 +1,8 @@
 #ifndef _BEHAVIOR_STATE_MACHINE_H_
 #define _BEHAVIOR_STATE_MACHINE_H_
 
+#include "common_params.h"
+
 #include <ArduinoSTL.h>
 #include <vector>
 
@@ -28,7 +30,7 @@ public:
   }
   virtual ~BehaviorStateMachine(){};
 
-  virtual BehaviorStateMachine *get_next_state() = 0;
+  virtual STATE_TYPE get_next_state() = 0;
   virtual void init();
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine *next_state);
@@ -41,7 +43,7 @@ private:
   std::vector<std::pair<BehaviorStateMachine *, int>> behavior_log_;
   STATE_TYPE behavior_state_;
   std::vector<BehaviorStateMachine *> p_next_states_;
-  uint64_t time_;
+  uint64_t runtime_;
 };
 
 #endif
