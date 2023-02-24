@@ -42,7 +42,7 @@ STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE &behavior)
     }
   }
 
-  return STATE_TYPE::INVALID_STATE;
+  return (STATE_TYPE::INVALID_STATE);
 }
 
 bool BehaviorStateMachine::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
@@ -64,14 +64,13 @@ STATE_TYPE ForwardState::get_next_state()
 bool ForwardState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
 {
   // std::cout << _PF_ << "run" << std::endl;
-  // line_follower.follow_line();
-  // motor_output = line_follower.get_motor_output();
+
   LineFollower &line_follower = decision_maker.get_line_follower();
   const SensorData &sensor_data = decision_maker.get_sensor_data();
   line_follower.follow_line(sensor_data.line_tracing_right_,
                             sensor_data.line_tracing_left_);
+  sensor_data_ = sensor_data;
   motor_output = line_follower.get_motor_output();
-
   return true;
 }
 

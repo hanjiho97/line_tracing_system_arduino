@@ -51,21 +51,19 @@ enum STATE_TYPE
 struct SensorData
 {
   SensorData()
-      : line_tracing_threshold_(0),
-        line_tracing_right_(0),
+      : line_tracing_right_(0),
         line_tracing_left_(0),
         ir_value_(0),
         collision_value_(0),
-        current_time_(0) {}
+        read_time_(0) {}
 
-  uint16_t line_tracing_threshold_;
   uint16_t line_tracing_right_;
   uint16_t line_tracing_left_;
 
   uint16_t ir_value_;
   uint16_t collision_value_;
 
-  uint32_t current_time_;
+  uint32_t read_time_;
 };
 
 struct MotorOuput

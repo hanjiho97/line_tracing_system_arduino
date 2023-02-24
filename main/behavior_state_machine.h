@@ -34,6 +34,7 @@ protected:
   STATE_TYPE behavior_state_;
   std::vector<BehaviorStateMachine *> p_next_states_;
   uint32_t runtime_;
+  SensorData sensor_data_;
 };
 
 /*****************************************************************************************/

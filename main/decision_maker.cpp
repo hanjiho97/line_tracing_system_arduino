@@ -74,6 +74,8 @@ void DecisionMaker::read_sensor_data()
   sensor_data_.line_tracing_right_ = analogRead(RIGHT_LINE_SENSOR_PIN);
   sensor_data_.line_tracing_left_ = analogRead(LEFT_LINE_SENSOR_PIN);
   sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
+  sensor_data_.collision_value_ = 0; // TODO
+  sensor_data_.current_time_ = millis();
 }
 
 void DecisionMaker::write_control_signal(const MotorOuput& motor_output)
