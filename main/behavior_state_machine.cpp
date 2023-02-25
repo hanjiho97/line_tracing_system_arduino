@@ -68,10 +68,10 @@ bool LineFollowState::run(DecisionMaker &decision_maker, MotorOuput &motor_outpu
   std::cout << _PF_ << "******************************************" << std::endl;
 
   decision_maker.get_sensor_data(sensor_data_);
-  LineFollower &line_follower = decision_maker.get_line_follower();
-  line_follower.follow_line(sensor_data_.line_tracing_right_,
+  line_follower_.get_line_follower();
+  line_follower_.follow_line(sensor_data_.line_tracing_right_,
                             sensor_data_.line_tracing_left_);
-  motor_output = line_follower.get_motor_output();
+  motor_output = line_follower_.get_motor_output();
   return true;
 }
 

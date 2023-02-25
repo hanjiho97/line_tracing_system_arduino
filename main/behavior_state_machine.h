@@ -1,11 +1,12 @@
 #ifndef _BEHAVIOR_STATE_MACHINE_H_
 #define _BEHAVIOR_STATE_MACHINE_H_
 
-#include "common_params.h"
-#include "decision_maker.h"
-
 #include <ArduinoSTL.h>
 #include <vector>
+
+#include "common_params.h"
+#include "decision_maker.h"
+#include "line_follower.h"
 
 class DecisionMaker;
 class LineFollower;
@@ -45,11 +46,12 @@ protected:
 /*****************************************************************************************/
 class LineFollowState : public BehaviorStateMachine
 {
+private:
+  LineFollower line_follower_;
 public:
   LineFollowState()
       : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW)
-  {
-  }
+  {}
   virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -65,8 +67,7 @@ class InitState : public BehaviorStateMachine
 public:
   InitState()
       : BehaviorStateMachine(STATE_TYPE::INIT)
-  {
-  }
+  {}
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -82,8 +83,7 @@ class StopState : public BehaviorStateMachine
 public:
   StopState()
       : BehaviorStateMachine(STATE_TYPE::STOP)
-  {
-  }
+  {}
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -99,8 +99,7 @@ class EmergencyStopState : public BehaviorStateMachine
 public:
   EmergencyStopState()
       : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP)
-  {
-  }
+  {}
   virtual ~EmergencyStopState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -116,8 +115,7 @@ class ParkingState : public BehaviorStateMachine
 public:
   ParkingState()
       : BehaviorStateMachine(STATE_TYPE::PARKING)
-  {
-  }
+  {}
   virtual ~ParkingState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -133,8 +131,7 @@ class ObstacleAvoidanceState : public BehaviorStateMachine
 public:
   ObstacleAvoidanceState()
       : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE)
-  {
-  }
+  {}
   virtual ~ObstacleAvoidanceState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -150,8 +147,7 @@ class CollisionStopState : public BehaviorStateMachine
 public:
   CollisionStopState()
       : BehaviorStateMachine(STATE_TYPE::COLLISION_STOP)
-  {
-  }
+  {}
   virtual ~CollisionStopState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -167,8 +163,7 @@ class TheftEmergencyState : public BehaviorStateMachine
 public:
   TheftEmergencyState()
       : BehaviorStateMachine(STATE_TYPE::THEFT_EMERGENCY)
-  {
-  }
+  {}
   virtual ~TheftEmergencyState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
@@ -184,8 +179,7 @@ class DoneState : public BehaviorStateMachine
 public:
   DoneState()
       : BehaviorStateMachine(STATE_TYPE::DONE)
-  {
-  }
+  {}
   virtual ~DoneState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);

@@ -1,15 +1,11 @@
 #ifndef _DECISION_MAKER_H_
 #define _DECISION_MAKER_H_
 
-#include "behavior_state_machine.h"
-#include "line_follower.h"
-// #include "init_state.h"
-// #include "stop_state.h"
-// #include "forward_state.h"
-#include "common_params.h"
-
 #include <ArduinoSTL.h>
 #include <vector>
+
+#include "behavior_state_machine.h"
+#include "common_params.h"
 
 class BehaviorStateMachine;
 
@@ -26,11 +22,6 @@ public:
   void set_sensor_data(const SensorData& sensor_data)
   {
     sensor_data_ = sensor_data;
-  }
-
-  LineFollower& get_line_follower()
-  {
-    return line_follower_;
   }
 
   SensorData& get_sensor_data()
@@ -51,7 +42,6 @@ protected:
   std::vector<BehaviorStateMachine *> states_;
   SensorData sensor_data_;
 
-  LineFollower line_follower_;
   AF_DCMotor *right_motor_;
   AF_DCMotor *left_motor_;
 };
