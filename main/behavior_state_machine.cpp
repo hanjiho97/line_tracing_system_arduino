@@ -67,11 +67,10 @@ bool ForwardState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
   std::cout << _PF_ << "***************FORWARD_STATE**************" << std::endl;
   std::cout << _PF_ << "******************************************" << std::endl;
 
+  decision_maker.get_sensor_data(sensor_data_);
   LineFollower &line_follower = decision_maker.get_line_follower();
-  const SensorData &sensor_data = decision_maker.get_sensor_data();
-  line_follower.follow_line(sensor_data.line_tracing_right_,
-                            sensor_data.line_tracing_left_);
-  sensor_data_ = sensor_data;
+  line_follower.follow_line(sensor_data_.line_tracing_right_,
+                            sensor_data_.line_tracing_left_);
   motor_output = line_follower.get_motor_output();
   return true;
 }

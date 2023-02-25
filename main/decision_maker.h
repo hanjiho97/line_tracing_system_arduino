@@ -38,6 +38,11 @@ public:
     return sensor_data_;
   }
 
+  void get_sensor_data(SensorData& sensor_data)
+  {
+    sensor_data = sensor_data_;
+  }
+
 protected:
   void init_motors();
   void init_sensor_pin();
