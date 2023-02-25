@@ -39,12 +39,13 @@ enum STATE_TYPE
   INIT,
   STOP, // main decision state
   LINE_FOLLOW,
-  PARKING,
   OBSTACLE_AVOIDANCE,
-  COLLISION_STOP,
-  THEFT_EMERGENCY,
+  COLLISION,
+  SYSTEM_FAULT,
   EMERGENCY_STOP,
-  DONE,
+  NORMAL_TERMINATION,
+  ABNORMAL_TERMINATION,
+  SYSTEM_RECOVERY,
   NUM_STATES
 };
 
@@ -79,7 +80,7 @@ struct SensorData
   uint32_t read_time_;
 };
 
-struct MotorOuput
+struct MotorOutput
 {
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
