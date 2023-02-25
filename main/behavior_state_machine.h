@@ -32,9 +32,9 @@ public:
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);
 
 protected:
-  // std::vector<std::pair<BehaviorStateMachine *, int>> behavior_log_;
+  // std::vector<std::pair<BehaviorStateMachine*, int>> behavior_log_;
   STATE_TYPE behavior_state_;
-  std::vector<BehaviorStateMachine *> p_next_states_;
+  std::vector<BehaviorStateMachine*> p_next_states_;
   uint32_t runtime_;
   SensorData sensor_data_;
 };
