@@ -192,3 +192,18 @@ bool TheftEmergencyState::run(DecisionMaker &decision_maker, MotorOuput &motor_o
 {
   return true;
 }
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/************************************ DoneState ******************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+STATE_TYPE DoneState::get_next_state()
+{
+  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+}
+
+bool DoneState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+{
+  return true;
+}

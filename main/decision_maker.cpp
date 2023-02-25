@@ -9,6 +9,12 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::INIT] = new InitState;
   states_[STATE_TYPE::STOP] = new StopState;
   states_[STATE_TYPE::LINE_FOLLOW] = new LineFollowState;
+  states_[STATE_TYPE::PARKING] = new ParkingState;
+  states_[STATE_TYPE::OBSTACLE_AVOIDANCE] = new ObstacleAvoidanceState;
+  states_[STATE_TYPE::COLLISION_STOP] = new CollisionStopState;
+  states_[STATE_TYPE::THEFT_EMERGENCY] = new TheftEmergencyState;
+  states_[STATE_TYPE::EMERGENCY_STOP] = new EmergencyStopState;
+  states_[STATE_TYPE::DONE] = new DoneState;
 
   // define edges of INIT_STATE 
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);

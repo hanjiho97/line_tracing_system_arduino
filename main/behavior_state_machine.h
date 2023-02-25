@@ -98,7 +98,7 @@ class EmergencyStopState : public BehaviorStateMachine
 {
 public:
   EmergencyStopState()
-      : BehaviorStateMachine(STATE_TYPE::STOP)
+      : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP)
   {
   }
   virtual ~EmergencyStopState() {}
@@ -115,7 +115,7 @@ class ParkingState : public BehaviorStateMachine
 {
 public:
   ParkingState()
-      : BehaviorStateMachine(STATE_TYPE::STOP)
+      : BehaviorStateMachine(STATE_TYPE::PARKING)
   {
   }
   virtual ~ParkingState() {}
@@ -132,7 +132,7 @@ class ObstacleAvoidanceState : public BehaviorStateMachine
 {
 public:
   ObstacleAvoidanceState()
-      : BehaviorStateMachine(STATE_TYPE::STOP)
+      : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE)
   {
   }
   virtual ~ObstacleAvoidanceState() {}
@@ -149,7 +149,7 @@ class CollisionStopState : public BehaviorStateMachine
 {
 public:
   CollisionStopState()
-      : BehaviorStateMachine(STATE_TYPE::STOP)
+      : BehaviorStateMachine(STATE_TYPE::COLLISION_STOP)
   {
   }
   virtual ~CollisionStopState() {}
@@ -166,10 +166,27 @@ class TheftEmergencyState : public BehaviorStateMachine
 {
 public:
   TheftEmergencyState()
-      : BehaviorStateMachine(STATE_TYPE::STOP)
+      : BehaviorStateMachine(STATE_TYPE::THEFT_EMERGENCY)
   {
   }
   virtual ~TheftEmergencyState() {}
+  virtual STATE_TYPE get_next_state();
+  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/*********************************** DoneState *******************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class DoneState : public BehaviorStateMachine
+{
+public:
+  DoneState()
+      : BehaviorStateMachine(STATE_TYPE::DONE)
+  {
+  }
+  virtual ~DoneState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
 };
