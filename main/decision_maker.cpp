@@ -6,6 +6,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   init_sensor_pin();
   init_motors();
 
+  // define nodes in state machine graph
   states_[STATE_TYPE::INIT] = new InitState;
   states_[STATE_TYPE::STOP] = new StopState;
   states_[STATE_TYPE::LINE_FOLLOW] = new LineFollowState;
@@ -21,13 +22,35 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
 
   // define edges of STOP_STATE 
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::PARKING]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::OBSTACLE_AVOIDANCE]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::THEFT_EMERGENCY]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::DONE]);
+
+  // define edges of LINE_FOLLOW_STATE
+  states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::STOP]);
+  states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::EMERGENCY_STOP]);
+  states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::COLLISION_STOP]);
+
+  // define edges of PARKING_STATE
+  states_[STATE_TYPE::PARKING]->insert_next_state(states_[STATE_TYPE::STOP]);
+
+  // define edges of OBSTACLE_AVOIDANCE_STATE
+  states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::STOP]);
+
+  // define edges of COLLISION_STOP_STATE
+  states_[STATE_TYPE::COLLISION_STOP]->insert_next_state(states_[STATE_TYPE::STOP]);
+
+  // define edges of THEFT_EMERGENCY_STATE
+  states_[STATE_TYPE::THEFT_EMERGENCY]->insert_next_state(states_[STATE_TYPE::STOP]);
 }
 
 DecisionMaker::~DecisionMaker()
 {
   for (uint32_t i = 0; i < static_cast<uint32_t>(STATE_TYPE::NUM_STATES); i++)
   {
-    delete states_[i];
+    if (states_[i] != nullptr)
+      delete states_[i];
   }
 
   delete right_motor_;
