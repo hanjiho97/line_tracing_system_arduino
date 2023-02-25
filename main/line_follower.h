@@ -18,7 +18,7 @@ private:
   int8_t direction;
   int8_t previous_direction;
 
-  MotorOuput motor_output_;
+  MotorOutput motor_output_;
 
 public:
   LineFollower();
@@ -30,7 +30,7 @@ public:
   void turn_left();
   void turn_right();
 
-  inline MotorOuput get_motor_output()
+  inline MotorOutput get_motor_output()
   {
     return motor_output_;
   }

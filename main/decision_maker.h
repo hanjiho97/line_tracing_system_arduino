@@ -16,10 +16,10 @@ public:
   ~DecisionMaker();
 
   void read_sensor_data();
-  void write_control_signal(const MotorOuput& motor_output);
+  void write_control_signal(const MotorOutput &motor_output);
   void run();
 
-  void set_sensor_data(const SensorData& sensor_data)
+  void set_sensor_data(const SensorData &sensor_data)
   {
     sensor_data_ = sensor_data;
   }
@@ -29,7 +29,7 @@ public:
     return sensor_data_;
   }
 
-  void get_sensor_data(SensorData& sensor_data)
+  void get_sensor_data(SensorData &sensor_data)
   {
     sensor_data = sensor_data_;
   }
