@@ -8,7 +8,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
 
   states_[STATE_TYPE::INIT] = new InitState;
   states_[STATE_TYPE::STOP] = new StopState;
-  states_[STATE_TYPE::LINE_FOLLOW] = new ForwardState;
+  states_[STATE_TYPE::LINE_FOLLOW] = new LineFollowState;
 
   // define edges of INIT_STATE 
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);
