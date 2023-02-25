@@ -8,7 +8,6 @@
 #include <vector>
 
 class DecisionMaker;
-class LineFollower;
 
 class BehaviorStateMachine
 {
@@ -26,7 +25,7 @@ public:
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine *next_state);
   // virtual void print_state(BehaviorStateMachine *next_state);
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);
 
@@ -36,23 +35,6 @@ protected:
   std::vector<BehaviorStateMachine *> p_next_states_;
   uint32_t runtime_;
   SensorData sensor_data_;
-};
-
-/*****************************************************************************************/
-/*****************************************************************************************/
-/******************************** LineFollowState ****************************************/
-/*****************************************************************************************/
-/*****************************************************************************************/
-class LineFollowState : public BehaviorStateMachine
-{
-public:
-  LineFollowState()
-      : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW)
-  {
-  }
-  virtual ~LineFollowState() {}
-  virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
 };
 
 /*****************************************************************************************/
@@ -69,7 +51,7 @@ public:
   }
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
@@ -86,41 +68,24 @@ public:
   }
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/******************************* EmergencyStopState **************************************/
+/******************************** LineFollowState ****************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class EmergencyStopState : public BehaviorStateMachine
+class LineFollowState : public BehaviorStateMachine
 {
 public:
-  EmergencyStopState()
-      : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP)
+  LineFollowState()
+      : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW)
   {
   }
-  virtual ~EmergencyStopState() {}
+  virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
-};
-
-/*****************************************************************************************/
-/*****************************************************************************************/
-/********************************** ParkingState *****************************************/
-/*****************************************************************************************/
-/*****************************************************************************************/
-class ParkingState : public BehaviorStateMachine
-{
-public:
-  ParkingState()
-      : BehaviorStateMachine(STATE_TYPE::PARKING)
-  {
-  }
-  virtual ~ParkingState() {}
-  virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
@@ -137,58 +102,109 @@ public:
   }
   virtual ~ObstacleAvoidanceState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/******************************* CollisionStopState **************************************/
+/********************************* CollisionState ****************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class CollisionStopState : public BehaviorStateMachine
+class CollisionState : public BehaviorStateMachine
 {
 public:
-  CollisionStopState()
-      : BehaviorStateMachine(STATE_TYPE::COLLISION_STOP)
+  CollisionState()
+      : BehaviorStateMachine(STATE_TYPE::COLLISION)
   {
   }
-  virtual ~CollisionStopState() {}
+  virtual ~CollisionState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/****************************** TheftEmergencyState **************************************/
+/******************************** SystemFaultState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class TheftEmergencyState : public BehaviorStateMachine
+class SystemFaultState : public BehaviorStateMachine
 {
 public:
-  TheftEmergencyState()
-      : BehaviorStateMachine(STATE_TYPE::THEFT_EMERGENCY)
+  SystemFaultState()
+      : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT)
   {
   }
-  virtual ~TheftEmergencyState() {}
+  virtual ~SystemFaultState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/*********************************** DoneState *******************************************/
+/******************************* EmergencyStopState **************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class DoneState : public BehaviorStateMachine
+class EmergencyStopState : public BehaviorStateMachine
 {
 public:
-  DoneState()
-      : BehaviorStateMachine(STATE_TYPE::DONE)
+  EmergencyStopState()
+      : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP)
   {
   }
-  virtual ~DoneState() {}
+  virtual ~EmergencyStopState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/****************************** NormalTerminationState ***********************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class NormalTerminationState : public BehaviorStateMachine
+{
+public:
+  NormalTerminationState()
+      : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION)
+  {
+  }
+  virtual ~NormalTerminationState() {}
+  virtual STATE_TYPE get_next_state();
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/**************************** AbnormalTerminationState ***********************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class AbnormalTerminationState : public BehaviorStateMachine
+{
+public:
+  AbnormalTerminationState()
+      : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION)
+  {
+  }
+  virtual ~AbnormalTerminationState() {}
+  virtual STATE_TYPE get_next_state();
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/******************************** SystemRecoveryState ************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class SystemRecoveryState : public BehaviorStateMachine
+{
+public:
+  SystemRecoveryState()
+      : BehaviorStateMachine(STATE_TYPE::SYSTEM_RECOVERY)
+  {
+  }
+  virtual ~SystemRecoveryState() {}
+  virtual STATE_TYPE get_next_state();
+  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
 #endif

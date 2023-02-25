@@ -45,33 +45,9 @@ STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE &behavior)
   return (STATE_TYPE::INVALID_STATE);
 }
 
-bool BehaviorStateMachine::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool BehaviorStateMachine::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   // std::cout << _PF_ << "run" << std::endl;
-  return true;
-}
-
-/*****************************************************************************************/
-/*****************************************************************************************/
-/********************************* LineFollowState ***************************************/
-/*****************************************************************************************/
-/*****************************************************************************************/
-STATE_TYPE LineFollowState::get_next_state()
-{
-  return (STATE_TYPE::LINE_FOLLOW);
-}
-
-bool LineFollowState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
-{
-  std::cout << _PF_ << "******************************************" << std::endl;
-  std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
-  std::cout << _PF_ << "******************************************" << std::endl;
-
-  decision_maker.get_sensor_data(sensor_data_);
-  LineFollower &line_follower = decision_maker.get_line_follower();
-  line_follower.follow_line(sensor_data_.line_tracing_right_,
-                            sensor_data_.line_tracing_left_);
-  motor_output = line_follower.get_motor_output();
   return true;
 }
 
@@ -92,7 +68,7 @@ STATE_TYPE InitState::get_next_state()
     return find_behavior_state(STATE_TYPE::STOP);
 }
 
-bool InitState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool InitState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   // std::cout << _PF_ << " Ready..." << std::endl;
   // std::cout << " Ready..." << std::endl;
@@ -113,7 +89,76 @@ STATE_TYPE StopState::get_next_state()
   return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
 }
 
-bool StopState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool StopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+{
+  return true;
+}
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/********************************* LineFollowState ***************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+STATE_TYPE LineFollowState::get_next_state()
+{
+  return (STATE_TYPE::LINE_FOLLOW);
+}
+
+bool LineFollowState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+{
+  std::cout << _PF_ << "******************************************" << std::endl;
+  std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
+  std::cout << _PF_ << "******************************************" << std::endl;
+
+  decision_maker.get_sensor_data(sensor_data_);
+  LineFollower &line_follower = decision_maker.get_line_follower();
+  line_follower.follow_line(sensor_data_.line_tracing_right_,
+                            sensor_data_.line_tracing_left_);
+  motor_output = line_follower.get_motor_output();
+  return true;
+}
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/**************************** ObstacleAvoidanceState *************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+STATE_TYPE ObstacleAvoidanceState::get_next_state()
+{
+  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+}
+
+bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+{
+  return true;
+}
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/********************************* CollisionState ****************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+STATE_TYPE CollisionState::get_next_state()
+{
+  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+}
+
+bool CollisionState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+{
+  return true;
+}
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/******************************** SystemFaultState ***************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+STATE_TYPE SystemFaultState::get_next_state()
+{
+  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+}
+
+bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   return true;
 }
@@ -128,82 +173,52 @@ STATE_TYPE EmergencyStopState::get_next_state()
   return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
 }
 
-bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   return true;
 }
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/********************************* ParkingState ******************************************/
+/***************************** NormalTerminationState ************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE ParkingState::get_next_state()
+STATE_TYPE NormalTerminationState::get_next_state()
 {
   return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
 }
 
-bool ParkingState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool NormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   return true;
 }
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/**************************** ObstacleAvoidanceState *************************************/
+/**************************** AbnormalTerminationState ***********************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE ObstacleAvoidanceState::get_next_state()
+STATE_TYPE AbnormalTerminationState::get_next_state()
 {
   return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
 }
 
-bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   return true;
 }
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/****************************** CollisionStopState ***************************************/
+/****************************** SystemRecoveryState **************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE CollisionStopState::get_next_state()
+STATE_TYPE SystemRecoveryState::get_next_state()
 {
   return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
 }
 
-bool CollisionStopState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
-{
-  return true;
-}
-
-/*****************************************************************************************/
-/*****************************************************************************************/
-/****************************** TheftEmergencyState **************************************/
-/*****************************************************************************************/
-/*****************************************************************************************/
-STATE_TYPE TheftEmergencyState::get_next_state()
-{
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
-}
-
-bool TheftEmergencyState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
-{
-  return true;
-}
-
-/*****************************************************************************************/
-/*****************************************************************************************/
-/************************************ DoneState ******************************************/
-/*****************************************************************************************/
-/*****************************************************************************************/
-STATE_TYPE DoneState::get_next_state()
-{
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
-}
-
-bool DoneState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool SystemRecoveryState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
   return true;
 }
