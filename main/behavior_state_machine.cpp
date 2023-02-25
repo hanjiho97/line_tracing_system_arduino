@@ -53,18 +53,18 @@ bool BehaviorStateMachine::run(DecisionMaker &decision_maker, MotorOuput &motor_
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/********************************** ForwardState *****************************************/
+/********************************* LineFollowState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE ForwardState::get_next_state()
+STATE_TYPE LineFollowState::get_next_state()
 {
   return (STATE_TYPE::LINE_FOLLOW);
 }
 
-bool ForwardState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
+bool LineFollowState::run(DecisionMaker &decision_maker, MotorOuput &motor_output)
 {
   std::cout << _PF_ << "******************************************" << std::endl;
-  std::cout << _PF_ << "***************FORWARD_STATE**************" << std::endl;
+  std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
   std::cout << _PF_ << "******************************************" << std::endl;
 
   decision_maker.get_sensor_data(sensor_data_);

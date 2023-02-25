@@ -40,17 +40,17 @@ protected:
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/********************************** ForwardState *****************************************/
+/******************************** LineFollowState ****************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class ForwardState : public BehaviorStateMachine
+class LineFollowState : public BehaviorStateMachine
 {
 public:
-  ForwardState()
+  LineFollowState()
       : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW)
   {
   }
-  virtual ~ForwardState() {}
+  virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker &decision_maker, MotorOuput &motor_output);
 };
