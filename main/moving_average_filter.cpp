@@ -2,7 +2,7 @@
 
 
 MovingAverageFilter::MovingAverageFilter(uint8_t sample_size)
-    sample_size_(sample_size)
+  : sample_size_(sample_size)
 {
   weight_.reserve(sample_size_);
   for (uint8_t i = 1U; i < sample_size_; ++i)

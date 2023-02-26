@@ -103,8 +103,8 @@ struct MotorOutput
   MotorOutput()
     : right_motor_speed_(0)
     , left_motor_speed_(0)
-    , right_motor_mode_(0)
-    , left_motor_mode_(0) {}
+    , right_motor_mode_(RELEASE)
+    , left_motor_mode_(RELEASE) {}
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
   uint8_t right_motor_mode_;
@@ -116,8 +116,8 @@ struct DisplayOutput
   DisplayOutput()
     : right_motor_speed_(0)
     , left_motor_speed_(0)
-    , right_motor_mode_(0)
-    , left_motor_mode_(0) {}
+    , right_motor_mode_(RELEASE)
+    , left_motor_mode_(RELEASE) {}
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
   uint8_t right_motor_mode_;
