@@ -29,6 +29,11 @@ public:
 
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);
 
+  void set_sensor_data(const SensorData& sensor_data)
+  {
+    sensor_data_ = sensor_data;
+  }
+
 protected:
   uint32_t runtime_;
   STATE_TYPE behavior_state_;
@@ -64,9 +69,6 @@ public:
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
-
-private:
-  uint32_t time_differance;
 };
 
 /*****************************************************************************************/
@@ -85,7 +87,7 @@ public:
 
 private:
   bool check_lane_existance();
-  
+
   LineFollower line_follower_;
   uint32_t none_lane_start_time_;
 };

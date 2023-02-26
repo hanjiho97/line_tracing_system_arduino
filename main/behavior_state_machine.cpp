@@ -66,9 +66,9 @@ STATE_TYPE InitState::get_next_state(DecisionMaker& decision_maker)
 {
   // std::cout << "runtime: " << static_cast<uint32_t>(runtime_) << std::endl;
   // std::cout << "millis(): " << static_cast<uint32_t>(millis()) << std::endl;
-  uint32_t time_differance = millis() - runtime_;
-  std::cout << "time_diff: " << time_differance << std::endl;
-  if (time_differance < START_WAIT_TIME_MS)
+  uint32_t time_difference = millis() - runtime_;
+  std::cout << "time_diff: " << time_difference << std::endl;
+  if (time_difference < START_WAIT_TIME_MS)
     return find_behavior_state(behavior_state_);
   else
     return find_behavior_state(STATE_TYPE::STOP);
@@ -92,7 +92,7 @@ bool InitState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 /*****************************************************************************************/
 STATE_TYPE StopState::get_next_state(DecisionMaker& decision_maker)
 {
-  time_differance = millis() - runtime_;
+  uint32_t time_difference = millis() - runtime_;
   // collision
   if (sensor_data_.collision_value_ == 0)
   {
@@ -111,7 +111,7 @@ STATE_TYPE StopState::get_next_state(DecisionMaker& decision_maker)
       if (sensor_data_.ir_value_ == 0)
       {
         // obstacle avoidance
-        if (time_differance >= STOP_WAIT_TIME_MS)
+        if (time_difference >= STOP_WAIT_TIME_MS)
         {
           return find_behavior_state(STATE_TYPE::OBSTACLE_AVOIDANCE);
         }
@@ -224,7 +224,8 @@ bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOutput &mot
 /*****************************************************************************************/
 STATE_TYPE CollisionState::get_next_state(DecisionMaker& decision_maker)
 {
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+  (void)decision_maker;
+  return find_behavior_state(STATE_TYPE::NORMAL_TERMINATION);
 }
 
 bool CollisionState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
@@ -234,6 +235,11 @@ bool CollisionState::run(DecisionMaker &decision_maker, MotorOutput &motor_outpu
   motor_output.left_motor_speed_ = 0;
   motor_output.right_motor_mode_ = RELEASE;
   motor_output.left_motor_mode_ = RELEASE;
+
+  /**
+   * TODO: airbag exploded situation 
+  */
+
   return true;
 }
 
@@ -259,11 +265,21 @@ bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_out
 /*****************************************************************************************/
 STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker& decision_maker)
 {
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+  uint32_t time_difference = millis() - runtime_;
+  
+  // go to ego state
+  if (time_difference < EMERGENCY_STOP_WAIT_TIME_MS)
+    return find_behavior_state(STATE_TYPE::EMERGENCY_STOP);
+  // go to normal termination state
+  else
+    return find_behavior_state(STATE_TYPE::NORMAL_TERMINATION);
 }
 
 bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
+  /**
+   * TODO: alert emergency stop state 
+  */
   return true;
 }
 

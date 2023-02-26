@@ -45,6 +45,9 @@
 // sensor fault
 #define FAULT_DETECTION_THRESHOLD 1000
 
+// emergency stop state
+#define EMERGENCY_STOP_WAIT_TIME_MS 1000 
+
 enum DIRECTION
 {
   STRAGHIT,
