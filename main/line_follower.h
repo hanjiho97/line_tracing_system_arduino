@@ -1,25 +1,15 @@
 #ifndef _LINE_FOLLOWER_H
 #define _LINE_FOLLOWER_H
 
-#include "common_params.h"
-#include "moving_average_filter.h"
-
 #include <Arduino.h>
 #include <AFMotor.h>
 
+#include "common_params.h"
+#include "moving_average_filter.h"
+
+
 class LineFollower
 {
-private:
-  MovingAverageFilter *right_filter_ptr_;
-  MovingAverageFilter *left_filter_ptr_;
-
-  float right_sensor_mean_value_;
-  float left_sensor_mean_value_;
-  int8_t direction;
-  int8_t previous_direction;
-
-  MotorOutput motor_output_;
-
 public:
   LineFollower();
   virtual ~LineFollower();
@@ -34,6 +24,17 @@ public:
   {
     return motor_output_;
   }
+
+private:
+  MovingAverageFilter *right_filter_ptr_;
+  MovingAverageFilter *left_filter_ptr_;
+
+  float right_sensor_mean_value_;
+  float left_sensor_mean_value_;
+  int8_t direction;
+  int8_t previous_direction;
+
+  MotorOutput motor_output_;
 };
 
 #endif

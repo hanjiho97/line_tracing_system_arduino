@@ -1,5 +1,6 @@
 #include "moving_average_filter.h"
 
+
 MovingAverageFilter::MovingAverageFilter(uint8_t sample_size)
     : kSampleSize_(sample_size)
 {

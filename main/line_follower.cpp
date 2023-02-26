@@ -1,12 +1,5 @@
 #include "line_follower.h"
 
-enum DIRECTION
-{
-  STRAGHIT,
-  RIGHT,
-  LEFT,
-  NONE
-};
 
 LineFollower::LineFollower()
 {

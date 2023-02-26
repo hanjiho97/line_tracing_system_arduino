@@ -4,6 +4,7 @@
 #include <ArduinoSTL.h>
 #include <AFMotor.h>
 
+
 // for debugging
 #define _PF_ __PRETTY_FUNCTION__
 
@@ -16,11 +17,14 @@
 // ir sensor pin number
 #define IR_SENSOR_PIN 9
 
+//  sensor pin number
+#define COLLISION_SENSOR_PIN -1
+
 // both motors number
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-#define CLOCK_PIN -1
+#define DISPLAY_PIN -1
 
 // line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
@@ -32,6 +36,20 @@
 
 // state related paramters
 #define START_WAIT_TIME_MS 5000
+#define STOP_WAIT_TIME_MS 5000
+#define NONE_LANE_TIME_MS 5000
+#define DONE_TIME_MS 600000
+
+// sensor fault
+#define FAULT_DETECTION_THRESHOLD 1000
+
+enum DIRECTION
+{
+  STRAGHIT,
+  RIGHT,
+  LEFT,
+  NONE
+};
 
 enum STATE_TYPE
 {
@@ -48,19 +66,6 @@ enum STATE_TYPE
   SYSTEM_RECOVERY,
   NUM_STATES
 };
-
-// const char* STATES_STRING[]
-// {
-//   "INIT_STATE",
-//   "STOP_STATE",
-//   "LINE_FOLLOW_STATE",
-//   "PARKING_STATE",
-//   "AVOIDANCE_STATE",
-//   "COLLISION_STOP_STATE",
-//   "THEFT_EMERGENCY_STATE",
-//   "EMERGENCY_STOP_STATE",
-//   "DONE_STATE"
-// };
 
 struct SensorData
 {
@@ -81,6 +86,14 @@ struct SensorData
 };
 
 struct MotorOutput
+{
+  uint8_t right_motor_speed_;
+  uint8_t left_motor_speed_;
+  uint8_t right_motor_mode_;
+  uint8_t left_motor_mode_;
+};
+
+struct DisplayOutput
 {
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
