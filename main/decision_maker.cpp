@@ -17,7 +17,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::EMERGENCY_STOP] = new EmergencyStopState;
   states_[STATE_TYPE::NORMAL_TERMINATION] = new NormalTerminationState;
   states_[STATE_TYPE::ABNORMAL_TERMINATION] = new AbnormalTerminationState;
-  states_[STATE_TYPE::RECOVERY] = new SystemRecoveryState;
+  states_[STATE_TYPE::RECOVERY] = new RecoveryState;
 
   // define edges of INIT_STATE
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);
