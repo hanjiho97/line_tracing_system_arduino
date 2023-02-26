@@ -17,7 +17,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::EMERGENCY_STOP] = new EmergencyStopState;
   states_[STATE_TYPE::NORMAL_TERMINATION] = new NormalTerminationState;
   states_[STATE_TYPE::ABNORMAL_TERMINATION] = new AbnormalTerminationState;
-  states_[STATE_TYPE::SYSTEM_RECOVERY] = new SystemRecoveryState;
+  states_[STATE_TYPE::RECOVERY] = new SystemRecoveryState;
 
   // define edges of INIT_STATE
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -26,13 +26,12 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::OBSTACLE_AVOIDANCE]);
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::COLLISION]);
-  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::NORMAL_TERMINATION]);
-  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::SYSTEM_RECOVERY]);
 
   // define edges of LINE_FOLLOW_STATE
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::STOP]);
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::EMERGENCY_STOP]);
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
   // define edges of OBSTACLE_AVOIDANCE_STATE
   states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -40,17 +39,20 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::COLLISION]);
 
   // define edges of COLLISION_STATE
+  states_[STATE_TYPE::COLLISION]->insert_next_state(states_[STATE_TYPE::COLLISION]);
   states_[STATE_TYPE::COLLISION]->insert_next_state(states_[STATE_TYPE::NORMAL_TERMINATION]);
 
   // define edges of SYSTEM_FAULT_STATE
+  states_[STATE_TYPE::SYSTEM_FAULT]->insert_next_state(states_[STATE_TYPE::INIT]);
   states_[STATE_TYPE::SYSTEM_FAULT]->insert_next_state(states_[STATE_TYPE::ABNORMAL_TERMINATION]);
 
   // define edges of EMERGENCY_STOP_STATE
-  states_[STATE_TYPE::EMERGENCY_STOP]->insert_next_state(states_[STATE_TYPE::STOP]);
+  states_[STATE_TYPE::EMERGENCY_STOP]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
-  // define edges of NORMAL_TERMINATION_STATE
-  states_[STATE_TYPE::NORMAL_TERMINATION]->insert_next_state(states_[STATE_TYPE::ABNORMAL_TERMINATION]);
-
+  //define deges of RECOVERY
+  states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
+  states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::STOP]);
 }
 
 DecisionMaker::~DecisionMaker()
@@ -125,7 +127,11 @@ void DecisionMaker::run()
 
   STATE_TYPE new_state = current_state_;
 
-  if (check_sensor_data() == true)
+  if (sensor_data_.read_time_ >= DONE_TIME_MS)
+  {
+    new_state = STATE_TYPE::NORMAL_TERMINATION;
+  }
+  else if (check_sensor_data() == true)
   {
     new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
   }
