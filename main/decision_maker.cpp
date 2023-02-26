@@ -139,6 +139,7 @@ void DecisionMaker::run()
   {
     current_state_ = new_state;
     states_[static_cast<uint32_t>(current_state_)]->reset_timer();
+    states_[static_cast<uint32_t>(current_state_)]->reset_parameters();
   }
 
   MotorOutput motor_output;

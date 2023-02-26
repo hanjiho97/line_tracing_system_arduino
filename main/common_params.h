@@ -16,11 +16,12 @@
 
 // ir sensor 
 #define IR_SENSOR_PIN 9
-// #define IR_DETECTED 0
-// #define IR_NOT_DETECTED 1
+#define IR_DETECTED 0
+#define IR_NOT_DETECTED 1
 
 // collision sensor
 #define COLLISION_SENSOR_PIN -1
+#define COLLISION_DETECTED_THRESHOLD 500
 
 // motors
 #define RIGHT_MOTOR_NUMBER 1
@@ -45,8 +46,11 @@
 // sensor fault
 #define FAULT_DETECTION_THRESHOLD 1000
 
-// emergency stop state
+// emergency stop state params
 #define EMERGENCY_STOP_WAIT_TIME_MS 1000 
+
+// obstacle avoidance state params
+#define AVOIDACNE_LINE_NOT_DETETED_TIME_MS 1000
 
 enum DIRECTION
 {

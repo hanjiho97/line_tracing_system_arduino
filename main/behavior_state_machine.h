@@ -26,6 +26,10 @@ public:
   virtual void insert_next_state(BehaviorStateMachine* next_state);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
   virtual bool display_state(DecisionMaker& decision_maker, DisplayOutput& display_output); //TO DO
+  virtual void reset_parameters()
+  {
+    runtime_ = 0;
+  }
 
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);
 
@@ -54,6 +58,7 @@ public:
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -69,6 +74,7 @@ public:
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -84,6 +90,10 @@ public:
   virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() 
+  {
+    none_lane_start_time_ = 0;
+  }
 
 private:
   bool check_lane_existance();
@@ -101,10 +111,30 @@ class ObstacleAvoidanceState : public BehaviorStateMachine
 {
 public:
   ObstacleAvoidanceState()
-  : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE) {}
+  : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE)
+  , avoidance_success_(false)
+  , previous_line_detected_(false)
+  , line_not_detected_time_(0)
+  , line_not_detected_start_time_(0) {}
   virtual ~ObstacleAvoidanceState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters()
+  {
+    avoidance_success_ = false;
+    previous_line_detected_ = false;
+    line_not_detected_time_ = 0;
+    line_not_detected_start_time_ = 0;
+  }
+
+private:
+  bool exist_line();
+  void measure_line_not_detected_time();
+
+  bool avoidance_success_;
+  bool previous_line_detected_;
+  uint32_t line_not_detected_time_;
+  uint32_t line_not_detected_start_time_;
 };
 
 /*****************************************************************************************/
@@ -121,6 +151,7 @@ public:
   virtual ~CollisionState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -136,6 +167,7 @@ public:
   virtual ~SystemFaultState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -151,6 +183,7 @@ public:
   virtual ~EmergencyStopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -166,6 +199,7 @@ public:
   virtual ~NormalTerminationState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -181,6 +215,7 @@ public:
   virtual ~AbnormalTerminationState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 /*****************************************************************************************/
@@ -196,6 +231,7 @@ public:
   virtual ~SystemRecoveryState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
 };
 
 #endif
