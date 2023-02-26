@@ -80,7 +80,7 @@ void DecisionMaker::init_sensor_pin()
   pinMode(RIGHT_LINE_SENSOR_PIN, INPUT_PULLUP);
   pinMode(LEFT_LINE_SENSOR_PIN, INPUT_PULLUP);
   pinMode(IR_SENSOR_PIN, INPUT);
-  pinMode(COLLISION_SENSOR_PIN, INPUT);
+  pinMode(COLLISION_SENSOR_PIN, INPUT_PULLUP);
 }
 
 void DecisionMaker::read_sensor_data()
@@ -88,7 +88,7 @@ void DecisionMaker::read_sensor_data()
   sensor_data_.line_tracing_right_ = analogRead(RIGHT_LINE_SENSOR_PIN);
   sensor_data_.line_tracing_left_ = analogRead(LEFT_LINE_SENSOR_PIN);
   sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
-  sensor_data_.collision_value_ = digitalRead(COLLISION_SENSOR_PIN); // TODO
+  sensor_data_.collision_value_ = analogRead(COLLISION_SENSOR_PIN); // TODO
   sensor_data_.read_time_ = millis();
 }
 
@@ -114,7 +114,7 @@ void DecisionMaker::write_control_signal(const MotorOutput &motor_output)
   left_motor_->run(motor_output.left_motor_mode_);
 }
 
-void write_display_signal(const DisplayOutput& display_output) // TO DO
+void DecisionMaker::write_display_signal(const DisplayOutput& display_output) // TO DO
 {
   return;
 }
