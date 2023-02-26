@@ -7,7 +7,6 @@
 #include "behavior_state_machine.h"
 #include "common_params.h"
 
-
 class BehaviorStateMachine;
 
 class DecisionMaker
@@ -16,13 +15,9 @@ public:
   DecisionMaker(const STATE_TYPE initial_state = STATE_TYPE::INIT);
   ~DecisionMaker();
 
-  void read_sensor_data();
-  bool check_sensor_data();
-  void write_control_signal(const MotorOutput& motor_output);
-  void write_display_signal(const DisplayOutput& display_output);
   void run();
 
-  SensorData& get_sensor_data()
+  SensorData &get_sensor_data()
   {
     return sensor_data_;
   }
@@ -30,13 +25,17 @@ public:
 protected:
   void init_motors();
   void init_sensor_pin();
+  bool check_sensor_data();
+  void read_sensor_data();
+  void write_control_signal(const MotorOutput& motor_output);
+  void write_display_signal(const DisplayOutput& display_output);
 
   STATE_TYPE current_state_;
   std::vector<BehaviorStateMachine*> states_;
   SensorData sensor_data_;
 
-  AF_DCMotor* right_motor_;
-  AF_DCMotor* left_motor_;
+  AF_DCMotor *right_motor_;
+  AF_DCMotor *left_motor_;
 };
 
 #endif

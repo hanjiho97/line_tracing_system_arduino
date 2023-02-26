@@ -127,7 +127,7 @@ void DecisionMaker::run()
 
   if (check_sensor_data() == true)
   {
-    new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
+    new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state(*this);
   }
   else
   {

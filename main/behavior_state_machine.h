@@ -20,7 +20,7 @@ public:
     init();
   }
   virtual ~BehaviorStateMachine() {};
-  virtual STATE_TYPE get_next_state() = 0;
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker) = 0;
   virtual void init();
   virtual void reset_timer();
   virtual void insert_next_state(BehaviorStateMachine* next_state);
@@ -47,7 +47,7 @@ public:
   InitState()
   : BehaviorStateMachine(STATE_TYPE::INIT) {}
   virtual ~InitState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -62,7 +62,7 @@ public:
   StopState()
   : BehaviorStateMachine(STATE_TYPE::STOP) {}
   virtual ~StopState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 
 private:
@@ -78,15 +78,16 @@ class LineFollowState : public BehaviorStateMachine
 {
 public:
   LineFollowState()
-  : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW), none_lane_start_time(0) {}
+  : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW), none_lane_start_time_(0) {}
   virtual ~LineFollowState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
-  bool check_lane_existance();
 
 private:
+  bool check_lane_existance();
+  
   LineFollower line_follower_;
-  uint32_t none_lane_start_time;
+  uint32_t none_lane_start_time_;
 };
 
 /*****************************************************************************************/
@@ -100,7 +101,7 @@ public:
   ObstacleAvoidanceState()
   : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE) {}
   virtual ~ObstacleAvoidanceState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -116,7 +117,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::COLLISION)
   {}
   virtual ~CollisionState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -131,7 +132,7 @@ public:
   SystemFaultState()
   : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT) {}
   virtual ~SystemFaultState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
 };
 
@@ -146,7 +147,7 @@ public:
   EmergencyStopState()
   : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP) {}
   virtual ~EmergencyStopState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -161,7 +162,7 @@ public:
   NormalTerminationState()
   : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION) {}
   virtual ~NormalTerminationState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -176,7 +177,7 @@ public:
   AbnormalTerminationState()
   : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION) {}
   virtual ~AbnormalTerminationState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
@@ -191,7 +192,7 @@ public:
   SystemRecoveryState()
   : BehaviorStateMachine(STATE_TYPE::SYSTEM_RECOVERY) {}
   virtual ~SystemRecoveryState() {}
-  virtual STATE_TYPE get_next_state();
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
