@@ -4,7 +4,6 @@
 #include <ArduinoSTL.h>
 #include <AFMotor.h>
 
-
 // for debugging
 #define _PF_ __PRETTY_FUNCTION__
 
@@ -101,6 +100,11 @@ struct SensorData
 
 struct MotorOutput
 {
+  MotorOutput()
+    : right_motor_speed_(0)
+    , left_motor_speed_(0)
+    , right_motor_mode_(0)
+    , left_motor_mode_(0) {}
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
   uint8_t right_motor_mode_;
@@ -109,6 +113,11 @@ struct MotorOutput
 
 struct DisplayOutput
 {
+  DisplayOutput()
+    : right_motor_speed_(0)
+    , left_motor_speed_(0)
+    , right_motor_mode_(0)
+    , left_motor_mode_(0) {}
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;
   uint8_t right_motor_mode_;
