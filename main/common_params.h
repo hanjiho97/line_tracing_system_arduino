@@ -11,31 +11,32 @@
 #define INIT_SPEED 150
 
 // line sensors
-#define RIGHT_LINE_SENSOR_PIN A5
-#define LEFT_LINE_SENSOR_PIN A0
+#define LEFT_LINE_SENSOR_PIN 2
+#define RIGHT_LINE_SENSOR_PIN 3
 
 // ir sensor
-#define IR_SENSOR_PIN 9
+#define IR_SENSOR_PIN A0
 #define IR_DETECTED 0
 #define IR_NOT_DETECTED 1
 
 // collision sensor
-#define COLLISION_SENSOR_PIN -1
+#define COLLISION_SENSOR_PIN A1
 #define COLLISION_DETECTED_THRESHOLD 500
 
 // motors
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-#define DISPLAY_PIN -1
+#define DISPLAY_SDA_PIN A4
+#define DISPLAY_SCL_PIN A5
 
 // line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
 #define NUMBER_OF_SAMPLES 10
 
 // motor control parameters
-#define HIGH_MOTOR_SPEED 150
-#define LOW_MOTOR_SPEED 100
+#define HIGH_MOTOR_SPEED 250
+#define LOW_MOTOR_SPEED 200
 
 // state related paramters
 #define START_WAIT_TIME_MS 5000

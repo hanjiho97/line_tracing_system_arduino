@@ -2,10 +2,10 @@
 
 
 MovingAverageFilter::MovingAverageFilter(uint8_t sample_size)
-    : kSampleSize_(sample_size)
+    sample_size_(sample_size)
 {
-  weight_.reserve(kSampleSize_);
-  for (uint8_t i = 1U; i <= kSampleSize_; ++i)
+  weight_.reserve(sample_size_);
+  for (uint8_t i = 1U; i < sample_size_; ++i)
   {
     weight_.push_back(i);
   }
@@ -14,7 +14,7 @@ MovingAverageFilter::MovingAverageFilter(uint8_t sample_size)
 void MovingAverageFilter::add_sample(uint16_t new_sample)
 {
   samples_.push_back(new_sample);
-  if (samples_.size() > kSampleSize_)
+  if (samples_.size() > sample_size_)
   {
     samples_.pop_front();
   }

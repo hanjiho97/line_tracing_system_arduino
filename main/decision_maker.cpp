@@ -86,8 +86,8 @@ void DecisionMaker::init_sensor_pin()
 
 void DecisionMaker::read_sensor_data()
 {
-  sensor_data_.line_tracing_right_ = analogRead(RIGHT_LINE_SENSOR_PIN);
-  sensor_data_.line_tracing_left_ = analogRead(LEFT_LINE_SENSOR_PIN);
+  sensor_data_.line_tracing_right_ = digitalRead(RIGHT_LINE_SENSOR_PIN) * 1000;
+  sensor_data_.line_tracing_left_ = digitalRead(LEFT_LINE_SENSOR_PIN) * 1000;
   sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
   sensor_data_.collision_value_ = analogRead(COLLISION_SENSOR_PIN); // TODO
   sensor_data_.read_time_ = millis();
@@ -95,15 +95,7 @@ void DecisionMaker::read_sensor_data()
 
 bool DecisionMaker::check_sensor_data()
 {
-  if ((sensor_data_.line_tracing_right_ > FAULT_DETECTION_THRESHOLD) ||
-      (sensor_data_.line_tracing_left_ > FAULT_DETECTION_THRESHOLD))
-  {
-    return false;
-  }
-  else
-  {
-    return true;
-  }
+  return true;
 }
 
 void DecisionMaker::write_control_signal(const MotorOutput &motor_output)

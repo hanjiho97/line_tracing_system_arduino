@@ -144,7 +144,7 @@ bool StopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 /********************************* LineFollowState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   measure_line_not_detected_time();
@@ -179,7 +179,7 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool LineFollowState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool LineFollowState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   std::cout << _PF_ << "******************************************" << std::endl;
   std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
@@ -230,7 +230,7 @@ void LineFollowState::measure_line_not_detected_time()
 /**************************** ObstacleAvoidanceState *************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   measure_line_not_detected_time();
@@ -256,7 +256,7 @@ STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool ObstacleAvoidanceState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   uint32_t time_difference = millis() - runtime_ + restore_time_;
   //right turn
@@ -377,7 +377,7 @@ bool CollisionState::run(DecisionMaker& decision_maker, MotorOutput& motor_outpu
 /******************************** SystemFaultState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE SystemFaultState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE SystemFaultState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   if (fault_count_ > FAULT_COUNT_THRESHOLD)
@@ -390,7 +390,7 @@ STATE_TYPE SystemFaultState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool SystemFaultState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   motor_output.right_motor_speed_ = 0;
   motor_output.left_motor_speed_ = 0;
@@ -405,7 +405,7 @@ bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_out
 /****************************** EmergencyStopState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker& decision_maker)
 {
   uint32_t time_difference = millis() - runtime_;
   if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
@@ -433,7 +433,7 @@ STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool EmergencyStopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   motor_output.right_motor_speed_ = 0;
   motor_output.left_motor_speed_ = 0;
@@ -451,12 +451,12 @@ bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_o
 /***************************** NormalTerminationState ************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE NormalTerminationState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE NormalTerminationState::get_next_state(DecisionMaker& decision_maker)
 {
   return find_behavior_state(behavior_state_);
 }
 
-bool NormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool NormalTerminationState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   motor_output.right_motor_speed_ = 0;
   motor_output.left_motor_speed_ = 0;
@@ -470,12 +470,12 @@ bool NormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &mot
 /**************************** AbnormalTerminationState ***********************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE AbnormalTerminationState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE AbnormalTerminationState::get_next_state(DecisionMaker& decision_maker)
 {
   return find_behavior_state(behavior_state_);
 }
 
-bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool AbnormalTerminationState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   motor_output.right_motor_speed_ = 0;
   motor_output.left_motor_speed_ = 0;
@@ -489,7 +489,7 @@ bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &m
 /******************************** RecoveryState ******************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE RecoveryState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   if (sensor_data_.collision_value_ == 0)
@@ -517,7 +517,7 @@ STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool RecoveryState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool RecoveryState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   motor_output.right_motor_mode_ = BACKWARD;
   motor_output.left_motor_mode_ = BACKWARD;

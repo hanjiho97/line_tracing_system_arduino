@@ -21,7 +21,7 @@ public:
   float get_moving_average();
 
 private:
-  const uint8_t kSampleSize_;
+  const uint8_t sample_size_;
   std::deque<uint16_t> samples_;
   std::vector<uint8_t> weight_;
 };
