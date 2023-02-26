@@ -29,7 +29,7 @@ public:
   {
     runtime_ = 0;
   }
-  virtual void set_flage() {}
+  virtual void set_flag() {}
 
   STATE_TYPE find_behavior_state(const STATE_TYPE& behavior);
 
