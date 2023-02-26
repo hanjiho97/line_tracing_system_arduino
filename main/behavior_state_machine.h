@@ -29,6 +29,7 @@ public:
   {
     runtime_ = 0;
   }
+  virtual void set_flage() {}
 
   STATE_TYPE find_behavior_state(const STATE_TYPE& behavior);
 
@@ -125,8 +126,7 @@ public:
     avoidance_success_(false),
     previous_line_detected_(false),
     line_not_detected_time_(0),
-    line_not_detected_start_time_(0),
-    restore_time_(0) {}
+    line_not_detected_start_time_(0) {}
   virtual ~ObstacleAvoidanceState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -139,10 +139,6 @@ public:
   }
   void measure_line_not_detected_time();
   bool exist_line();
-  void restore_time()
-  {
-    restore_time_ = millis() - runtime_;
-  }
 
 private:
   bool avoidance_success_;

@@ -242,6 +242,7 @@ STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
   }
   else if (sensor_data_.ir_value_ == IR_DETECTED)
   {
+    restore_time_ = millis() - runtime_;
     return find_behavior_state(STATE_TYPE::EMERGENCY_STOP);
   }
   else if (avoidance_success_ == true)
