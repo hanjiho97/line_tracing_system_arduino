@@ -315,7 +315,7 @@ STATE_TYPE SystemFaultState::get_next_state(DecisionMaker &decision_maker)
 
 bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
-  fault_count += 1;
+  fault_count_ += 1;
   return true;
 }
 
@@ -374,11 +374,10 @@ bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &m
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/****************************** RecoveryState **************************************/
+/******************************** RecoveryState ******************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-
-STATE_TYPE SystemRecoveryState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
 {
   if (sensor_data_.collision_value_ == 0)
   {
@@ -395,7 +394,7 @@ STATE_TYPE SystemRecoveryState::get_next_state(DecisionMaker &decision_maker)
       return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
     }
   }
-  else if ((sensor_data_.read_time_ - none_lane_start_time) > NONE_LANE_RECOVERY_TIME_MS)
+  else if ((sensor_data_.read_time_ - none_lane_start_time_) > NONE_LANE_RECOVERY_TIME_MS)
   {
     return find_behavior_state(STATE_TYPE::STOP);
   }

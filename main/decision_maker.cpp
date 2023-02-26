@@ -124,7 +124,7 @@ void DecisionMaker::run()
 {
   read_sensor_data();
 
-  STATE_TYPE new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
+  STATE_TYPE new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state(*this);
 
   if (sensor_data_.read_time_ >= DONE_TIME_MS)
   {

@@ -163,7 +163,7 @@ class SystemFaultState : public BehaviorStateMachine
 {
 public:
   SystemFaultState()
-      : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count(0) {}
+      : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count_(0) {}
   virtual ~SystemFaultState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker &decision_maker);
   virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
@@ -233,17 +233,19 @@ class RecoveryState : public BehaviorStateMachine
 {
 public:
   RecoveryState()
-      : BehaviorStateMachine(STATE_TYPE::RECOVERY), none_lane_start_time_(0) {}
+      : BehaviorStateMachine(STATE_TYPE::RECOVERY)
+      , none_lane_start_time_(0) {}
   virtual ~RecoveryState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker &decision_maker);
   virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
-  bool check_lane_existance();
   virtual void reset_parameters()
   {
     none_lane_start_time_ = 0;
   }
 
 private:
+  bool check_lane_existance();
+  
   uint32_t none_lane_start_time_;
 };
 
