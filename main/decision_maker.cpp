@@ -125,17 +125,16 @@ void DecisionMaker::run()
 {
   read_sensor_data();
 
-  STATE_TYPE new_state = current_state_;
+  STATE_TYPE new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
 
   if (sensor_data_.read_time_ >= DONE_TIME_MS)
   {
     new_state = STATE_TYPE::NORMAL_TERMINATION;
   }
-  else if (check_sensor_data() == true)
-  {
-    new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
-  }
-  else
+  else if ((check_sensor_data() == false) &&
+  (new_state != STATE_TYPE::SYSTEM_FAULT) &&
+  (new_state != STATE_TYPE::NORMAL_TERMINATION) &&
+  (new_state != STATE_TYPE::ABNORMAL_TERMINATION))
   {
     new_state = STATE_TYPE::SYSTEM_FAULT;
   }

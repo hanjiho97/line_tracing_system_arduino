@@ -242,7 +242,7 @@ bool CollisionState::run(DecisionMaker& decision_maker, MotorOutput& motor_outpu
 /*****************************************************************************************/
 STATE_TYPE SystemFaultState::get_next_state()
 {
-  if (fault_count >10)
+  if (fault_count > FAULT_COUNT_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::ABNORMAL_TERMINATION);
   }
