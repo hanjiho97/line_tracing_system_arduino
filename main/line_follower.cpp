@@ -1,13 +1,5 @@
 #include "line_follower.h"
 
-enum DIRECTION
-{
-  STRAGHIT,
-  RIGHT,
-  LEFT,
-  NONE
-};
-
 LineFollower::LineFollower()
 {
   right_filter_ptr_ = new MovingAverageFilter(NUMBER_OF_SAMPLES);
