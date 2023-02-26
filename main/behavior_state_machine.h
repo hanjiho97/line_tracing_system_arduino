@@ -129,10 +129,13 @@ class SystemFaultState : public BehaviorStateMachine
 {
 public:
   SystemFaultState()
-  : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT) {}
+  : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count(0) {}
   virtual ~SystemFaultState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+
+private:
+  uint8_t fault_count;
 };
 
 /*****************************************************************************************/
@@ -182,17 +185,21 @@ public:
 
 /*****************************************************************************************/
 /*****************************************************************************************/
-/******************************** SystemRecoveryState ************************************/
+/******************************** RecoveryState ************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-class SystemRecoveryState : public BehaviorStateMachine
+class RecoveryState : public BehaviorStateMachine
 {
 public:
-  SystemRecoveryState()
-  : BehaviorStateMachine(STATE_TYPE::SYSTEM_RECOVERY) {}
-  virtual ~SystemRecoveryState() {}
+  RecoveryState()
+  : BehaviorStateMachine(STATE_TYPE::RECOVERY) {}
+  virtual ~RecoveryState() {}
   virtual STATE_TYPE get_next_state();
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  bool check_lane_existance();
+
+private:
+  uint32_t none_lane_start_time;
 };
 
 #endif
