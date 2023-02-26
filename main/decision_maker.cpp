@@ -141,9 +141,21 @@ void DecisionMaker::run()
   std::cout << "new_state: " << new_state << std::endl;
   if (new_state != current_state_)
   {
-    current_state_ = new_state;
-    states_[static_cast<uint32_t>(current_state_)]->reset_timer();
-    states_[static_cast<uint32_t>(current_state_)]->reset_parameters();
+    if ((new_state == STATE_TYPE::EMERGENCY_STOP) &&
+    (current_state_ == STATE_TYPE::OBSTACLE_AVOIDANCE))
+    {
+      states_[static_cast<uint32_t>(current_state_)]->restore_time();
+      current_state_ = new_state;
+      states_[static_cast<uint32_t>(current_state_)]->reset_timer();
+      states_[static_cast<uint32_t>(current_state_)]->reset_parameters();
+      states_[static_cast<uint32_t>(current_state_)]->set_flag();
+    }
+    else
+    {
+      current_state_ = new_state;
+      states_[static_cast<uint32_t>(current_state_)]->reset_timer();
+      states_[static_cast<uint32_t>(current_state_)]->reset_parameters();
+    }
   }
 
   MotorOutput motor_output;

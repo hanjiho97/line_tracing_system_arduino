@@ -155,7 +155,7 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
   }
   else if (sensor_data_.ir_value_ == IR_DETECTED)
   {
-    if (check_lane_existance() == true)
+    if (exist_line() == true)
     {
       return find_behavior_state(STATE_TYPE::STOP);
     }
@@ -238,6 +238,7 @@ STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
   if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
+    restore_time_ = 0;
   }
   else if (sensor_data_.ir_value_ == IR_DETECTED)
   {
@@ -246,6 +247,7 @@ STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
   else if (avoidance_success_ == true)
   {
     return find_behavior_state(STATE_TYPE::STOP);
+    restore_time_ = 0;
   }
   else
   {
@@ -255,53 +257,53 @@ STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
 
 bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 {
-  uint32_t time_difference = millis() - runtime_;
+  uint32_t time_difference = millis() - runtime_ + restore_time_;
   //right turn
   if (time_difference < FIRST_CHECKPOINT_TIME_MS)
   {
-    motor_output_.right_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = BACKWARD;
-    motor_output_.left_motor_mode_ = FORWARD;
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = BACKWARD;
+    motor_output.left_motor_mode_ = FORWARD;
   }
   //go straight
   else if (time_difference < SECOND_CHECKPOINT_TIME_MS)
   {
-    motor_output_.right_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = FORWARD;
-    motor_output_.left_motor_mode_ = FORWARD;
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
   }
   //left turn
   else if (time_difference < THRID_CHECKPOINT_TIME_MS)
   {
-    motor_output_.right_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = FORWARD;
-    motor_output_.left_motor_mode_ = BACKWARD;
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = BACKWARD;
   }
   //go straight
   else if (time_difference < FOURTH_CHECKPOINT_TIME_MS)
   {
-    motor_output_.right_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = FORWARD;
-    motor_output_.left_motor_mode_ = FORWARD;
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
   }
   //left turn
   else if (time_difference < FIFTH_CHECKPOINT_TIME_MS)
   {
-    motor_output_.right_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = LOW_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = FORWARD;
-    motor_output_.left_motor_mode_ = BACKWARD;
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = BACKWARD;
   }
   else if (exist_line() == false)
   {
-    motor_output_.right_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.left_motor_speed_ = HIGH_MOTOR_SPEED;
-    motor_output_.right_motor_mode_ = FORWARD;
-    motor_output_.left_motor_mode_ = FORWARD;
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
   }
   else
   {
@@ -321,7 +323,7 @@ bool ObstacleAvoidanceState::exist_line()
 
 void ObstacleAvoidanceState::measure_line_not_detected_time()
 {
-  if (!exist_line())
+  if (exist_line() == false)
   {
     // firstly not detected
     if (previous_line_detected_)
@@ -409,9 +411,16 @@ STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker &decision_maker)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
   }
-  else if ((sensor_data_.ir_value_ == IR_NOT_DETECTED) && (avoidance_flag_ == true))
+  else if (avoidance_flag_ == true)
   {
-    return find_behavior_state(STATE_TYPE::OBSTACLE_AVOIDANCE);
+    if (sensor_data_.ir_value_ == IR_NOT_DETECTED)
+    {
+      return find_behavior_state(STATE_TYPE::OBSTACLE_AVOIDANCE);
+    }
+    else
+    {
+      return find_behavior_state(behavior_state_);
+    }
   }
   else if (time_difference >= EMERGENCY_STOP_NONE_LINE_LIMIT_TIME_MS)
   {
