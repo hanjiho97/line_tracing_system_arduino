@@ -11,48 +11,51 @@
 #define INIT_SPEED 150
 
 // line sensors
-#define RIGHT_LINE_SENSOR_PIN A5
-#define LEFT_LINE_SENSOR_PIN A0
+#define LEFT_LINE_SENSOR_PIN 2
+#define RIGHT_LINE_SENSOR_PIN 3
 
-// ir sensor 
-#define IR_SENSOR_PIN 9
+// ir sensor
+#define IR_SENSOR_PIN A0
 #define IR_DETECTED 0
 #define IR_NOT_DETECTED 1
 
 // collision sensor
-#define COLLISION_SENSOR_PIN -1
+#define COLLISION_SENSOR_PIN A1
 #define COLLISION_DETECTED_THRESHOLD 500
 
 // motors
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-#define DISPLAY_PIN -1
+#define DISPLAY_SDA_PIN A4
+#define DISPLAY_SCL_PIN A5
 
 // line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
 #define NUMBER_OF_SAMPLES 10
 
 // motor control parameters
-#define HIGH_MOTOR_SPEED 150
-#define LOW_MOTOR_SPEED 100
+#define HIGH_MOTOR_SPEED 250
+#define LOW_MOTOR_SPEED 200
 
 // state related paramters
 #define START_WAIT_TIME_MS 5000
 #define STOP_WAIT_TIME_MS 5000
-#define NONE_LANE_STOP_TIME_MS 1000
-#define NONE_LANE_RECOVERY_TIME_MS 3000
+#define EMERGENCY_STOP_NONE_LINE_LIMIT_TIME_MS 1000
+#define RECOVERY_NONE_LINE_LIMIT_TIME_MS 3000
+#define AVOIDACNE_NONE_LINE_LIMIT_TIME_MS 1000
 #define DONE_TIME_MS 600000
+
+// avoidance
+#define FIRST_CHECKPOINT_TIME_MS 1000
+#define SECOND_CHECKPOINT_TIME_MS 3000
+#define THRID_CHECKPOINT_TIME_MS 4000
+#define FOURTH_CHECKPOINT_TIME_MS 8000
+#define FIFTH_CHECKPOINT_TIME_MS 9000
 
 // sensor fault
 #define FAULT_DETECTION_THRESHOLD 1000
 #define FAULT_COUNT_THRESHOLD 10
-
-// emergency stop state params
-#define EMERGENCY_STOP_WAIT_TIME_MS 1000 
-
-// obstacle avoidance state params
-#define AVOIDACNE_LINE_NOT_DETETED_TIME_MS 1000
 
 enum DIRECTION
 {

@@ -7,26 +7,26 @@
 void BehaviorStateMachine::init()
 {
   std::cout << "init()" << std::endl;
-  runtime_ = sensor_data_.read_time_;
+  runtime_ = millis();
 }
 
 void BehaviorStateMachine::reset_timer()
 {
   std::cout << "reset_timer()" << std::endl;
-  runtime_ = sensor_data_.read_time_;
+  runtime_ = millis();
 }
 
-void BehaviorStateMachine::insert_next_state(BehaviorStateMachine *next_state)
+void BehaviorStateMachine::insert_next_state(BehaviorStateMachine* next_state)
 {
   if (next_state)
     p_next_states_.push_back(next_state);
 }
 
-STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE &behavior)
+STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE& behavior)
 {
   for (uint32_t i = 0U; i < p_next_states_.size(); ++i)
   {
-    BehaviorStateMachine *p_state = p_next_states_.at(i);
+    BehaviorStateMachine* p_state = p_next_states_.at(i);
     if (p_state && behavior == p_state->behavior_state_)
     {
       // UpdateLogCount(pState);
@@ -46,13 +46,13 @@ STATE_TYPE BehaviorStateMachine::find_behavior_state(const STATE_TYPE &behavior)
   return (STATE_TYPE::INVALID_STATE);
 }
 
-bool BehaviorStateMachine::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool BehaviorStateMachine::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   // std::cout << _PF_ << "run" << std::endl;
   return true;
 }
 
-bool BehaviorStateMachine::display_state(DecisionMaker &decision_maker, DisplayOutput &display_output)
+bool BehaviorStateMachine::display_state(DecisionMaker& decision_maker, DisplayOutput& display_output)
 {
   return true;
 }
@@ -62,7 +62,7 @@ bool BehaviorStateMachine::display_state(DecisionMaker &decision_maker, DisplayO
 /*********************************** InitState *******************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE InitState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE InitState::get_next_state(DecisionMaker& decision_maker)
 {
   uint32_t time_difference = millis() - runtime_;
 
@@ -72,7 +72,7 @@ STATE_TYPE InitState::get_next_state(DecisionMaker &decision_maker)
     return find_behavior_state(STATE_TYPE::STOP);
 }
 
-bool InitState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool InitState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   // std::cout << _PF_ << " Ready..." << std::endl;
   // std::cout << " Ready..." << std::endl;
@@ -88,8 +88,9 @@ bool InitState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 /*********************************** StopState *******************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE StopState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE StopState::get_next_state(DecisionMaker& decision_maker)
 {
+  sensor_data_ = decision_maker.get_sensor_data();
   uint32_t time_difference = millis() - runtime_;
 
   // collision
@@ -100,7 +101,7 @@ STATE_TYPE StopState::get_next_state(DecisionMaker &decision_maker)
   else
   {
     if ((sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD) ||
-        (sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD))
+        (sensor_data_.line_tracing_left_ > LINE_SENSOR_THRESHOLD))
     {
       if (sensor_data_.ir_value_ == IR_DETECTED)
       {
@@ -129,9 +130,8 @@ STATE_TYPE StopState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool StopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool StopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
-  sensor_data_ = decision_maker.get_sensor_data();
   motor_output.right_motor_mode_ = RELEASE;
   motor_output.left_motor_mode_ = RELEASE;
   motor_output.right_motor_speed_ = 0;
@@ -144,8 +144,10 @@ bool StopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
 /********************************* LineFollowState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
 {
+  sensor_data_ = decision_maker.get_sensor_data();
+  measure_line_not_detected_time();
   // collision detected
   if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
   {
@@ -153,11 +155,11 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
   }
   else if (sensor_data_.ir_value_ == IR_DETECTED)
   {
-    if (check_lane_existance() == true)
+    if (exist_line() == true)
     {
       return find_behavior_state(STATE_TYPE::STOP);
     }
-    else if ((sensor_data_.read_time_ - none_lane_start_time_) > NONE_LANE_STOP_TIME_MS)
+    else if (line_not_detected_time_ > EMERGENCY_STOP_NONE_LINE_LIMIT_TIME_MS)
     {
       return find_behavior_state(STATE_TYPE::EMERGENCY_STOP);
     }
@@ -166,8 +168,8 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
       return find_behavior_state(behavior_state_);
     }
   }
-  else if (((sensor_data_.read_time_ - none_lane_start_time_) > NONE_LANE_RECOVERY_TIME_MS) &&
-           (check_lane_existance() == false))
+  else if ((line_not_detected_time_ > RECOVERY_NONE_LINE_LIMIT_TIME_MS) &&
+           (exist_line() == false))
   {
     return find_behavior_state(STATE_TYPE::RECOVERY);
   }
@@ -177,12 +179,11 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool LineFollowState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool LineFollowState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
   std::cout << _PF_ << "******************************************" << std::endl;
   std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
   std::cout << _PF_ << "******************************************" << std::endl;
-
   sensor_data_ = decision_maker.get_sensor_data();
   line_follower_.follow_line(sensor_data_.line_tracing_right_,
                              sensor_data_.line_tracing_left_);
@@ -190,17 +191,37 @@ bool LineFollowState::run(DecisionMaker &decision_maker, MotorOutput &motor_outp
   return true;
 }
 
-bool LineFollowState::check_lane_existance()
+bool LineFollowState::exist_line()
 {
   if ((sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD) ||
-      (sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD))
-  {
+      (sensor_data_.line_tracing_left_ > LINE_SENSOR_THRESHOLD))
     return true;
+  else
+    return false;
+}
+
+void LineFollowState::measure_line_not_detected_time()
+{
+  if (exist_line() == false)
+  {
+    // firstly not detected
+    if (previous_line_detected_)
+    {
+      line_not_detected_start_time_ = millis();
+      line_not_detected_time_ = 0;
+      previous_line_detected_ = false;
+    }
+    // continuously not detected
+    else
+    {
+      // update not detected time
+      line_not_detected_time_ = millis() - line_not_detected_start_time_;
+    }
   }
   else
   {
-    none_lane_start_time_ = millis();
-    return false;
+    line_not_detected_time_ = 0;
+    previous_line_detected_ = true;
   }
 }
 
@@ -209,37 +230,93 @@ bool LineFollowState::check_lane_existance()
 /**************************** ObstacleAvoidanceState *************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE ObstacleAvoidanceState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   measure_line_not_detected_time();
 
   if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
+  {
     return find_behavior_state(STATE_TYPE::COLLISION);
-
-  if (avoidance_success_)
+    restore_time_ = 0;
+  }
+  else if (sensor_data_.ir_value_ == IR_DETECTED)
+  {
+    restore_time_ = millis() - runtime_;
+    return find_behavior_state(STATE_TYPE::EMERGENCY_STOP);
+  }
+  else if (avoidance_success_ == true)
   {
     return find_behavior_state(STATE_TYPE::STOP);
+    restore_time_ = 0;
   }
-
-  if (!avoidance_success_ &&
-      sensor_data_.collision_value_ >= COLLISION_DETECTED_THRESHOLD &&
-      sensor_data_.ir_value_ == IR_DETECTED &&
-      line_not_detected_time_ > AVOIDACNE_LINE_NOT_DETETED_TIME_MS)
-    return find_behavior_state(STATE_TYPE::EMERGENCY_STOP);
-
-  return find_behavior_state(behavior_state_);
+  else
+  {
+    return find_behavior_state(behavior_state_);
+  }
 }
 
-bool ObstacleAvoidanceState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool ObstacleAvoidanceState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
+  uint32_t time_difference = millis() - runtime_ + restore_time_;
+  //right turn
+  if (time_difference < FIRST_CHECKPOINT_TIME_MS)
+  {
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = BACKWARD;
+    motor_output.left_motor_mode_ = FORWARD;
+  }
+  //go straight
+  else if (time_difference < SECOND_CHECKPOINT_TIME_MS)
+  {
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
+  }
+  //left turn
+  else if (time_difference < THRID_CHECKPOINT_TIME_MS)
+  {
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = BACKWARD;
+  }
+  //go straight
+  else if (time_difference < FOURTH_CHECKPOINT_TIME_MS)
+  {
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
+  }
+  //left turn
+  else if (time_difference < FIFTH_CHECKPOINT_TIME_MS)
+  {
+    motor_output.right_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = LOW_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = BACKWARD;
+  }
+  else if (exist_line() == false)
+  {
+    motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.left_motor_speed_ = HIGH_MOTOR_SPEED;
+    motor_output.right_motor_mode_ = FORWARD;
+    motor_output.left_motor_mode_ = FORWARD;
+  }
+  else
+  {
+    avoidance_success_ = true;
+  }
   return true;
 }
 
 bool ObstacleAvoidanceState::exist_line()
 {
   if ((sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD) ||
-      (sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD))
+      (sensor_data_.line_tracing_left_ > LINE_SENSOR_THRESHOLD))
     return true;
   else
     return false;
@@ -247,7 +324,7 @@ bool ObstacleAvoidanceState::exist_line()
 
 void ObstacleAvoidanceState::measure_line_not_detected_time()
 {
-  if (!exist_line())
+  if (exist_line() == false)
   {
     // firstly not detected
     if (previous_line_detected_)
@@ -275,15 +352,14 @@ void ObstacleAvoidanceState::measure_line_not_detected_time()
 /********************************* CollisionState ****************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE CollisionState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE CollisionState::get_next_state(DecisionMaker& decision_maker)
 {
   (void)decision_maker;
   return find_behavior_state(STATE_TYPE::NORMAL_TERMINATION);
 }
 
-bool CollisionState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool CollisionState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
-  sensor_data_ = decision_maker.get_sensor_data();
   motor_output.right_motor_speed_ = 0;
   motor_output.left_motor_speed_ = 0;
   motor_output.right_motor_mode_ = RELEASE;
@@ -301,8 +377,9 @@ bool CollisionState::run(DecisionMaker &decision_maker, MotorOutput &motor_outpu
 /******************************** SystemFaultState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE SystemFaultState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE SystemFaultState::get_next_state(DecisionMaker& decision_maker)
 {
+  sensor_data_ = decision_maker.get_sensor_data();
   if (fault_count_ > FAULT_COUNT_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::ABNORMAL_TERMINATION);
@@ -313,8 +390,12 @@ STATE_TYPE SystemFaultState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool SystemFaultState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
+  motor_output.right_motor_speed_ = 0;
+  motor_output.left_motor_speed_ = 0;
+  motor_output.right_motor_mode_ = RELEASE;
+  motor_output.left_motor_mode_ = RELEASE;
   fault_count_ += 1;
   return true;
 }
@@ -324,18 +405,41 @@ bool SystemFaultState::run(DecisionMaker &decision_maker, MotorOutput &motor_out
 /****************************** EmergencyStopState ***************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE EmergencyStopState::get_next_state(DecisionMaker& decision_maker)
 {
   uint32_t time_difference = millis() - runtime_;
-
-  if (time_difference >= EMERGENCY_STOP_WAIT_TIME_MS)
-    return find_behavior_state(STATE_TYPE::NORMAL_TERMINATION);
-
-  return find_behavior_state(behavior_state_);
+  if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
+  {
+    return find_behavior_state(STATE_TYPE::COLLISION);
+  }
+  else if (avoidance_flag_ == true)
+  {
+    if (sensor_data_.ir_value_ == IR_NOT_DETECTED)
+    {
+      return find_behavior_state(STATE_TYPE::OBSTACLE_AVOIDANCE);
+    }
+    else
+    {
+      return find_behavior_state(behavior_state_);
+    }
+  }
+  else if (time_difference >= EMERGENCY_STOP_NONE_LINE_LIMIT_TIME_MS)
+  {
+    return find_behavior_state(STATE_TYPE::RECOVERY);
+  }
+  else
+  {
+    return find_behavior_state(behavior_state_);
+  }
 }
 
-bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool EmergencyStopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
+  motor_output.right_motor_speed_ = 0;
+  motor_output.left_motor_speed_ = 0;
+  motor_output.right_motor_mode_ = RELEASE;
+  motor_output.left_motor_mode_ = RELEASE;
+
   /**
    * TODO: alert emergency stop state
    */
@@ -347,13 +451,17 @@ bool EmergencyStopState::run(DecisionMaker &decision_maker, MotorOutput &motor_o
 /***************************** NormalTerminationState ************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE NormalTerminationState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE NormalTerminationState::get_next_state(DecisionMaker& decision_maker)
 {
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+  return find_behavior_state(behavior_state_);
 }
 
-bool NormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool NormalTerminationState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
+  motor_output.right_motor_speed_ = 0;
+  motor_output.left_motor_speed_ = 0;
+  motor_output.right_motor_mode_ = RELEASE;
+  motor_output.left_motor_mode_ = RELEASE;
   return true;
 }
 
@@ -362,13 +470,17 @@ bool NormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &mot
 /**************************** AbnormalTerminationState ***********************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE AbnormalTerminationState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE AbnormalTerminationState::get_next_state(DecisionMaker& decision_maker)
 {
-  return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+  return find_behavior_state(behavior_state_);
 }
 
-bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool AbnormalTerminationState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
+  motor_output.right_motor_speed_ = 0;
+  motor_output.left_motor_speed_ = 0;
+  motor_output.right_motor_mode_ = RELEASE;
+  motor_output.left_motor_mode_ = RELEASE;
   return true;
 }
 
@@ -377,15 +489,16 @@ bool AbnormalTerminationState::run(DecisionMaker &decision_maker, MotorOutput &m
 /******************************** RecoveryState ******************************************/
 /*****************************************************************************************/
 /*****************************************************************************************/
-STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
+STATE_TYPE RecoveryState::get_next_state(DecisionMaker& decision_maker)
 {
+  sensor_data_ = decision_maker.get_sensor_data();
   if (sensor_data_.collision_value_ == 0)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
   }
-  if (check_lane_existance() == true)
+  if (exist_line() == true)
   {
-    if ((sensor_data_.ir_value_ == 0))
+    if ((sensor_data_.ir_value_ == IR_DETECTED))
     {
       return find_behavior_state(STATE_TYPE::STOP);
     }
@@ -394,7 +507,7 @@ STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
       return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
     }
   }
-  else if ((sensor_data_.read_time_ - none_lane_start_time_) > NONE_LANE_RECOVERY_TIME_MS)
+  else if (line_not_detected_time_ > RECOVERY_NONE_LINE_LIMIT_TIME_MS)
   {
     return find_behavior_state(STATE_TYPE::STOP);
   }
@@ -404,9 +517,8 @@ STATE_TYPE RecoveryState::get_next_state(DecisionMaker &decision_maker)
   }
 }
 
-bool RecoveryState::run(DecisionMaker &decision_maker, MotorOutput &motor_output)
+bool RecoveryState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
-  sensor_data_ = decision_maker.get_sensor_data();
   motor_output.right_motor_mode_ = BACKWARD;
   motor_output.left_motor_mode_ = BACKWARD;
   motor_output.right_motor_speed_ = HIGH_MOTOR_SPEED;
@@ -414,16 +526,36 @@ bool RecoveryState::run(DecisionMaker &decision_maker, MotorOutput &motor_output
   return true;
 }
 
-bool RecoveryState::check_lane_existance()
+bool RecoveryState::exist_line()
 {
   if ((sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD) ||
-      (sensor_data_.line_tracing_right_ > LINE_SENSOR_THRESHOLD))
-  {
+      (sensor_data_.line_tracing_left_ > LINE_SENSOR_THRESHOLD))
     return true;
+  else
+    return false;
+}
+
+void RecoveryState::measure_line_not_detected_time()
+{
+  if (exist_line() == false)
+  {
+    // firstly not detected
+    if (previous_line_detected_)
+    {
+      line_not_detected_start_time_ = millis();
+      line_not_detected_time_ = 0;
+      previous_line_detected_ = false;
+    }
+    // continuously not detected
+    else
+    {
+      // update not detected time
+      line_not_detected_time_ = millis() - line_not_detected_start_time_;
+    }
   }
   else
   {
-    none_lane_start_time_ = sensor_data_.read_time_;
-    return false;
+    line_not_detected_time_ = 0;
+    previous_line_detected_ = true;
   }
 }
