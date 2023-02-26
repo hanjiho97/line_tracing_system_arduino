@@ -1,6 +1,5 @@
 #include "decision_maker.h"
 
-
 DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
     : current_state_(initial_state), states_(STATE_TYPE::NUM_STATES)
 {
@@ -49,7 +48,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   // define edges of EMERGENCY_STOP_STATE
   states_[STATE_TYPE::EMERGENCY_STOP]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
-  //define deges of RECOVERY
+  // define deges of RECOVERY
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::COLLISION]);
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -97,7 +96,7 @@ void DecisionMaker::read_sensor_data()
 bool DecisionMaker::check_sensor_data()
 {
   if ((sensor_data_.line_tracing_right_ > FAULT_DETECTION_THRESHOLD) ||
-   (sensor_data_.line_tracing_left_ > FAULT_DETECTION_THRESHOLD))
+      (sensor_data_.line_tracing_left_ > FAULT_DETECTION_THRESHOLD))
   {
     return false;
   }
@@ -116,7 +115,7 @@ void DecisionMaker::write_control_signal(const MotorOutput &motor_output)
   left_motor_->run(motor_output.left_motor_mode_);
 }
 
-void DecisionMaker::write_display_signal(const DisplayOutput& display_output) // TO DO
+void DecisionMaker::write_display_signal(const DisplayOutput &display_output) // TO DO
 {
   return;
 }
@@ -132,9 +131,9 @@ void DecisionMaker::run()
     new_state = STATE_TYPE::NORMAL_TERMINATION;
   }
   else if ((check_sensor_data() == false) &&
-  (new_state != STATE_TYPE::SYSTEM_FAULT) &&
-  (new_state != STATE_TYPE::NORMAL_TERMINATION) &&
-  (new_state != STATE_TYPE::ABNORMAL_TERMINATION))
+           (new_state != STATE_TYPE::SYSTEM_FAULT) &&
+           (new_state != STATE_TYPE::NORMAL_TERMINATION) &&
+           (new_state != STATE_TYPE::ABNORMAL_TERMINATION))
   {
     new_state = STATE_TYPE::SYSTEM_FAULT;
   }
@@ -144,6 +143,7 @@ void DecisionMaker::run()
   {
     current_state_ = new_state;
     states_[static_cast<uint32_t>(current_state_)]->reset_timer();
+    states_[static_cast<uint32_t>(current_state_)]->reset_parameters();
   }
 
   MotorOutput motor_output;

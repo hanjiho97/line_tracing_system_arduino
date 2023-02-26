@@ -10,17 +10,20 @@
 
 #define INIT_SPEED 150
 
-// both line sensors pin number
+// line sensors
 #define RIGHT_LINE_SENSOR_PIN A5
 #define LEFT_LINE_SENSOR_PIN A0
 
-// ir sensor pin number
+// ir sensor 
 #define IR_SENSOR_PIN 9
+#define IR_DETECTED 0
+#define IR_NOT_DETECTED 1
 
-//  sensor pin number
+// collision sensor
 #define COLLISION_SENSOR_PIN -1
+#define COLLISION_DETECTED_THRESHOLD 500
 
-// both motors number
+// motors
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
@@ -44,6 +47,12 @@
 // sensor fault
 #define FAULT_DETECTION_THRESHOLD 1000
 #define FAULT_COUNT_THRESHOLD 10
+
+// emergency stop state params
+#define EMERGENCY_STOP_WAIT_TIME_MS 1000 
+
+// obstacle avoidance state params
+#define AVOIDACNE_LINE_NOT_DETETED_TIME_MS 1000
 
 enum DIRECTION
 {
