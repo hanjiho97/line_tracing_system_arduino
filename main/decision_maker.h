@@ -17,7 +17,7 @@ public:
 
   void run();
 
-  SensorData &get_sensor_data()
+  SensorData& get_sensor_data()
   {
     return sensor_data_;
   }
@@ -34,8 +34,8 @@ protected:
   std::vector<BehaviorStateMachine*> states_;
   SensorData sensor_data_;
 
-  AF_DCMotor *right_motor_;
-  AF_DCMotor *left_motor_;
+  AF_DCMotor* right_motor_;
+  AF_DCMotor* left_motor_;
 };
 
 #endif
