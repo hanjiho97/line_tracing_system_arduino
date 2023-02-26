@@ -4,6 +4,7 @@
 #include <ArduinoSTL.h>
 #include <AFMotor.h>
 
+
 // for debugging
 #define _PF_ __PRETTY_FUNCTION__
 
@@ -23,7 +24,7 @@
 #define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
-#define CLOCK_PIN -1
+#define DISPLAY_PIN -1
 
 // line tracing parameters
 #define LINE_SENSOR_THRESHOLD 500
@@ -85,6 +86,14 @@ struct SensorData
 };
 
 struct MotorOutput
+{
+  uint8_t right_motor_speed_;
+  uint8_t left_motor_speed_;
+  uint8_t right_motor_mode_;
+  uint8_t left_motor_mode_;
+};
+
+struct DisplayOutput
 {
   uint8_t right_motor_speed_;
   uint8_t left_motor_speed_;

@@ -1,11 +1,12 @@
 #ifndef _LINE_FOLLOWER_H
 #define _LINE_FOLLOWER_H
 
+#include <Arduino.h>
+#include <AFMotor.h>
+
 #include "common_params.h"
 #include "moving_average_filter.h"
 
-#include <Arduino.h>
-#include <AFMotor.h>
 
 class LineFollower
 {

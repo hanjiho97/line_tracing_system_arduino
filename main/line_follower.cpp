@@ -1,5 +1,6 @@
 #include "line_follower.h"
 
+
 LineFollower::LineFollower()
 {
   right_filter_ptr_ = new MovingAverageFilter(NUMBER_OF_SAMPLES);

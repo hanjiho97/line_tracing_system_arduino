@@ -1,11 +1,12 @@
 #ifndef _MOVING_AVERAGE_FILTER_H_
 #define _MOVING_AVERAGE_FILTER_H_
 
-#include "common_params.h"
-
 #include <ArduinoSTL.h>
 #include <vector>
 #include <deque>
+
+#include "common_params.h"
+
 
 class MovingAverageFilter final
 {

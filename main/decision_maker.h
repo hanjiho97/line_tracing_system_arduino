@@ -7,6 +7,7 @@
 #include "behavior_state_machine.h"
 #include "common_params.h"
 
+
 class BehaviorStateMachine;
 
 class DecisionMaker
@@ -18,16 +19,12 @@ public:
   void read_sensor_data();
   bool check_sensor_data();
   void write_control_signal(const MotorOutput& motor_output);
+  void write_display_signal(const DisplayOutput& display_output);
   void run();
 
   SensorData& get_sensor_data()
   {
     return sensor_data_;
-  }
-
-  void get_sensor_data(SensorData& sensor_data)
-  {
-    sensor_data = sensor_data_;
   }
 
 protected:

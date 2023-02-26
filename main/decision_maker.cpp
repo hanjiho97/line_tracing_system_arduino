@@ -1,5 +1,6 @@
 #include "decision_maker.h"
 
+
 DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
     : current_state_(initial_state), states_(STATE_TYPE::NUM_STATES)
 {
@@ -78,7 +79,7 @@ void DecisionMaker::init_sensor_pin()
 {
   pinMode(RIGHT_LINE_SENSOR_PIN, INPUT_PULLUP);
   pinMode(LEFT_LINE_SENSOR_PIN, INPUT_PULLUP);
-  pinMode(IR_SENSOR_PIN, INPU);
+  pinMode(IR_SENSOR_PIN, INPUT);
   pinMode(COLLISION_SENSOR_PIN, INPUT);
 }
 
@@ -113,17 +114,24 @@ void DecisionMaker::write_control_signal(const MotorOutput &motor_output)
   left_motor_->run(motor_output.left_motor_mode_);
 }
 
+void write_display_signal(const DisplayOutput& display_output) // TO DO
+{
+  return;
+}
+
 void DecisionMaker::run()
 {
   read_sensor_data();
 
+  STATE_TYPE new_state = current_state_;
+
   if (check_sensor_data() == true)
   {
-    STATE_TYPE new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
+    new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state();
   }
   else
   {
-    STATE_TYPE new_state = states_[STATE_TYPE::SYSTEM_FAULT];
+    new_state = STATE_TYPE::SYSTEM_FAULT;
   }
 
   std::cout << "new_state: " << new_state << std::endl;

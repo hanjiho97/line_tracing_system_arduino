@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "common_params.h"
-#include "decision_maker.h"
 #include "line_follower.h"
+
 
 class DecisionMaker;
 
@@ -23,8 +23,9 @@ public:
   virtual STATE_TYPE get_next_state() = 0;
   virtual void init();
   virtual void reset_timer();
-  virtual void insert_next_state(BehaviorStateMachine *next_state);
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual void insert_next_state(BehaviorStateMachine* next_state);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual bool display_state(DecisionMaker& decision_maker, DisplayOutput& display_output); //TO DO
 
   STATE_TYPE find_behavior_state(const STATE_TYPE &behavior);
 
@@ -47,7 +48,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::INIT) {}
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -62,7 +63,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::STOP) {}
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 
 private:
   uint32_t time_differance;
@@ -80,7 +81,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW), none_lane_start_time(0) {}
   virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
   bool check_lane_existance();
 
 private:
@@ -100,7 +101,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE) {}
   virtual ~ObstacleAvoidanceState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -116,7 +117,7 @@ public:
   {}
   virtual ~CollisionState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -146,7 +147,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP) {}
   virtual ~EmergencyStopState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -161,7 +162,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION) {}
   virtual ~NormalTerminationState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -176,7 +177,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION) {}
   virtual ~AbnormalTerminationState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 /*****************************************************************************************/
@@ -191,7 +192,7 @@ public:
   : BehaviorStateMachine(STATE_TYPE::SYSTEM_RECOVERY) {}
   virtual ~SystemRecoveryState() {}
   virtual STATE_TYPE get_next_state();
-  virtual bool run(DecisionMaker &decision_maker, MotorOutput &motor_output);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
 };
 
 #endif
