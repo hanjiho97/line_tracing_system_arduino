@@ -6,13 +6,13 @@
 /*****************************************************************************************/
 void BehaviorStateMachine::init()
 {
-  std::cout << "init()" << std::endl;
+  // std::cout << "init()" << std::endl;
   runtime_ = millis();
 }
 
 void BehaviorStateMachine::reset_timer()
 {
-  std::cout << "reset_timer()" << std::endl;
+  // std::cout << "reset_timer()" << std::endl;
   runtime_ = millis();
 }
 
@@ -74,12 +74,9 @@ STATE_TYPE InitState::get_next_state(DecisionMaker& decision_maker)
 
 bool InitState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
-  // std::cout << _PF_ << " Ready..." << std::endl;
-  // std::cout << " Ready..." << std::endl;
-  // Serial.println("Ready...");
-  std::cout << _PF_ << "******************************************" << std::endl;
-  std::cout << _PF_ << "*****************INIT_STATE***************" << std::endl;
-  std::cout << _PF_ << "******************************************" << std::endl;
+  std::cout << "******************************************" << std::endl;
+  std::cout << "*****************INIT_STATE***************" << std::endl;
+  std::cout << "******************************************" << std::endl;
   return true;
 }
 
@@ -181,9 +178,9 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
 
 bool LineFollowState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 {
-  std::cout << _PF_ << "******************************************" << std::endl;
-  std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
-  std::cout << _PF_ << "******************************************" << std::endl;
+  // std::cout << _PF_ << "******************************************" << std::endl;
+  // std::cout << _PF_ << "************* LineFollowState ************" << std::endl;
+  // std::cout << _PF_ << "******************************************" << std::endl;
   sensor_data_ = decision_maker.get_sensor_data();
   line_follower_.follow_line(sensor_data_.line_tracing_right_,
                              sensor_data_.line_tracing_left_);

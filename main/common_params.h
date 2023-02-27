@@ -80,6 +80,20 @@ enum STATE_TYPE
   NUM_STATES
 };
 
+const std::string STATE_STR[] = 
+{
+  "INIT",
+  "STOP",
+  "LINE_FOLLOW",
+  "OBSTACLE_AVOIDANCE",
+  "COLLISION",
+  "SYSTEM_FAULT",
+  "EMERGENCY_STOP",
+  "NORMAL_TERMINATION",
+  "ABNORMAL_TERMINATION",
+  "RECOVERY"
+};
+
 struct SensorData
 {
   SensorData()

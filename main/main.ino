@@ -19,5 +19,5 @@ void loop()
 
   g_decision_maker->run();
 
-  delay(1000);
+//  delay(1000);
 }

@@ -130,7 +130,8 @@ void DecisionMaker::run()
     new_state = STATE_TYPE::SYSTEM_FAULT;
   }
 
-  std::cout << "new_state: " << new_state << std::endl;
+  // std::cout << "new_state: " << new_state << std::endl;
+  // std::cout << "new_state: " << STATE_STR[new_state] << std::endl;
   if (new_state != current_state_)
   {
     if ((new_state == STATE_TYPE::EMERGENCY_STOP) &&
@@ -151,7 +152,8 @@ void DecisionMaker::run()
 
   MotorOutput motor_output;
   if (states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output))
-    std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
+    std::cout << "Run Success: " << STATE_STR[new_state] << std::endl;
+    // std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
   else
     std::cout << "Run Failure: " << static_cast<uint32_t>(current_state_) << std::endl;
 
