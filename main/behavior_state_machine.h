@@ -12,9 +12,6 @@ class DecisionMaker;
 class BehaviorStateMachine
 {
 public:
-  // BehaviorStateMachine(STATE_TYPE behavior_state, const std::string &state_name)
-  //   : behavior_state_(behavior_state)
-  //   , behavior_state_str_(state_name)
     BehaviorStateMachine(STATE_TYPE behavior_state)
     : behavior_state_(behavior_state)
   {
@@ -46,7 +43,6 @@ protected:
   STATE_TYPE behavior_state_;
   std::vector<BehaviorStateMachine*> p_next_states_;
   SensorData sensor_data_;
-  // std::string behavior_state_str_;
 };
 
 /*****************************************************************************************/
@@ -58,7 +54,6 @@ class InitState : public BehaviorStateMachine
 {
 public:
   InitState()
-    // : BehaviorStateMachine(STATE_TYPE::INIT, "INIT") {}
     : BehaviorStateMachine(STATE_TYPE::INIT) {}
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
@@ -75,7 +70,6 @@ class StopState : public BehaviorStateMachine
 {
 public:
   StopState()
-    // : BehaviorStateMachine(STATE_TYPE::STOP, "STOP") {}
     : BehaviorStateMachine(STATE_TYPE::STOP) {}
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
@@ -92,7 +86,6 @@ class LineFollowState : public BehaviorStateMachine
 {
 public:
   LineFollowState()
-    // : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW, "LINE_FOLLOW"),
     : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW),
     avoidance_success_(false) {}
   virtual ~LineFollowState() {}
@@ -109,5 +102,28 @@ private:
 
   LineFollower line_follower_;
 };
+
+// /*****************************************************************************************/
+// /*****************************************************************************************/
+// /******************************** SystemFaultState ***************************************/
+// /*****************************************************************************************/
+// /*****************************************************************************************/
+// class SystemFaultState : public BehaviorStateMachine
+// {
+// public:
+//   SystemFaultState()
+//     // : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT, "SYSTEM_FAULT"), fault_count_(0) {}
+//     : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count_(0) {}
+//   virtual ~SystemFaultState() {}
+//   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
+//   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+//   virtual void reset_parameters()
+//   {
+//     fault_count_ = 0;
+//   }
+
+// private:
+//   uint8_t fault_count_;
+// };
 
 #endif

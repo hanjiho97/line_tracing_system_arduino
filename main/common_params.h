@@ -15,8 +15,7 @@
 
 // ir sensor
 #define IR_SENSOR_PIN A0
-#define IR_DETECTED 0
-#define IR_NOT_DETECTED 1
+#define IR_DETECTED_THRESHOLD 500
 
 // collision sensor
 #define COLLISION_SENSOR_PIN A1

@@ -11,6 +11,8 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::STOP] = new StopState;
   states_[STATE_TYPE::LINE_FOLLOW] = new LineFollowState;;
 
+  // states_[STATE_TYPE::SYSTEM_FAULT] = new SystemFaultState;
+
   // define edges of INIT_STATE
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);
 
@@ -55,14 +57,22 @@ void DecisionMaker::read_sensor_data()
 {
   sensor_data_.line_tracing_right_ = digitalRead(RIGHT_LINE_SENSOR_PIN) * 1000;
   sensor_data_.line_tracing_left_ = digitalRead(LEFT_LINE_SENSOR_PIN) * 1000;
-  sensor_data_.ir_value_ = -1;
-  sensor_data_.collision_value_ = 1000; // TODO
+  sensor_data_.ir_value_ = analogRead(IR_SENSOR_PIN);
+  sensor_data_.collision_value_ = analogRead(COLLISION_SENSOR_PIN); // TODO
   sensor_data_.read_time_ = millis();
+  // std::cout << "ir : " << sensor_data_.ir_value_ << "col : " << sensor_data_.collision_value_ << std::endl;
 }
 
 bool DecisionMaker::check_sensor_data()
 {
-  return true;
+  if ((sensor_data_.ir_value_ > 1000) || (sensor_data_.collision_value_ > 1000))
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 void DecisionMaker::write_control_signal(const MotorOutput& motor_output)
@@ -77,6 +87,7 @@ void DecisionMaker::write_control_signal(const MotorOutput& motor_output)
 void DecisionMaker::run()
 {
   read_sensor_data();
+  std::cout << check_sensor_data() << std::endl;
 
   STATE_TYPE new_state = states_[static_cast<uint32_t>(current_state_)]->get_next_state(*this);
   if (new_state != current_state_)
@@ -89,8 +100,6 @@ void DecisionMaker::run()
   MotorOutput motor_output;
   states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output);
   // if (states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output))
-
-  //   // std::cout << "Run Success: " << STATE_STR[new_state] << std::endl;
   //   std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
   // else
   //   std::cout << "Run Failure: " << static_cast<uint32_t>(current_state_) << std::endl;

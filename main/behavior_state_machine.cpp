@@ -123,3 +123,32 @@ bool LineFollowState::exist_line()
   else
     return false;
 }
+
+// /*****************************************************************************************/
+// /*****************************************************************************************/
+// /******************************** SystemFaultState ***************************************/
+// /*****************************************************************************************/
+// /*****************************************************************************************/
+// STATE_TYPE SystemFaultState::get_next_state(DecisionMaker& decision_maker)
+// {
+//   std::cout << "fault_count_: " << fault_count_ << std::endl;
+//   sensor_data_ = decision_maker.get_sensor_data();
+//   if (fault_count_ > FAULT_COUNT_THRESHOLD)
+//   {
+//     return find_behavior_state(STATE_TYPE::ABNORMAL_TERMINATION);
+//   }
+//   else
+//   {
+//     return find_behavior_state(STATE_TYPE::INIT);
+//   }
+// }
+
+// bool SystemFaultState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
+// {
+//   motor_output.right_motor_speed_ = 0;
+//   motor_output.left_motor_speed_ = 0;
+//   motor_output.right_motor_mode_ = RELEASE;
+//   motor_output.left_motor_mode_ = RELEASE;
+//   fault_count_ += 1;
+//   return true;
+// }
