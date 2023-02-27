@@ -12,9 +12,11 @@ class DecisionMaker;
 class BehaviorStateMachine
 {
 public:
-  BehaviorStateMachine(STATE_TYPE behavior_state, const std::string &state_name)
+  // BehaviorStateMachine(STATE_TYPE behavior_state, const std::string &state_name)
+  //   : behavior_state_(behavior_state)
+  //   , behavior_state_str_(state_name)
+    BehaviorStateMachine(STATE_TYPE behavior_state)
     : behavior_state_(behavior_state)
-    , behavior_state_str_(state_name)
   {
     p_next_states_.push_back(this);
     init();
@@ -31,10 +33,10 @@ public:
     runtime_ = 0;
   }
   virtual void set_flag() {}
-  virtual std::string get_state_name()
-  {
-    return behavior_state_str_;
-  }
+  // virtual std::string get_state_name()
+  // {
+  //   return behavior_state_str_;
+  // }
   
 
   STATE_TYPE find_behavior_state(const STATE_TYPE& behavior);
@@ -49,7 +51,7 @@ protected:
   STATE_TYPE behavior_state_;
   std::vector<BehaviorStateMachine*> p_next_states_;
   SensorData sensor_data_;
-  std::string behavior_state_str_;
+  // std::string behavior_state_str_;
 };
 
 /*****************************************************************************************/
@@ -61,7 +63,8 @@ class InitState : public BehaviorStateMachine
 {
 public:
   InitState()
-    : BehaviorStateMachine(STATE_TYPE::INIT, "INIT") {}
+    // : BehaviorStateMachine(STATE_TYPE::INIT, "INIT") {}
+    : BehaviorStateMachine(STATE_TYPE::INIT) {}
   virtual ~InitState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -77,7 +80,8 @@ class StopState : public BehaviorStateMachine
 {
 public:
   StopState()
-    : BehaviorStateMachine(STATE_TYPE::STOP, "STOP") {}
+    // : BehaviorStateMachine(STATE_TYPE::STOP, "STOP") {}
+    : BehaviorStateMachine(STATE_TYPE::STOP) {}
   virtual ~StopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -93,7 +97,8 @@ class LineFollowState : public BehaviorStateMachine
 {
 public:
   LineFollowState()
-    : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW, "LINE_FOLLOW"),
+    // : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW, "LINE_FOLLOW"),
+    : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW),
     avoidance_success_(false),
     previous_line_detected_(false),
     line_not_detected_time_(0),
@@ -129,7 +134,8 @@ class ObstacleAvoidanceState : public BehaviorStateMachine
 {
 public:
   ObstacleAvoidanceState()
-    : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE, "OBSTACLE_AVOIDANCE"),
+    // : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE, "OBSTACLE_AVOIDANCE"),
+    : BehaviorStateMachine(STATE_TYPE::OBSTACLE_AVOIDANCE),
     avoidance_success_(false),
     previous_line_detected_(false),
     line_not_detected_time_(0),
@@ -164,7 +170,8 @@ class CollisionState : public BehaviorStateMachine
 {
 public:
   CollisionState()
-    : BehaviorStateMachine(STATE_TYPE::COLLISION, "COLLISION")
+    // : BehaviorStateMachine(STATE_TYPE::COLLISION, "COLLISION")
+    : BehaviorStateMachine(STATE_TYPE::COLLISION)
   {
   }
   virtual ~CollisionState() {}
@@ -182,7 +189,8 @@ class SystemFaultState : public BehaviorStateMachine
 {
 public:
   SystemFaultState()
-    : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT, "SYSTEM_FAULT"), fault_count_(0) {}
+    // : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT, "SYSTEM_FAULT"), fault_count_(0) {}
+    : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count_(0) {}
   virtual ~SystemFaultState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -204,7 +212,8 @@ class EmergencyStopState : public BehaviorStateMachine
 {
 public:
   EmergencyStopState()
-    : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP, "EMERGENCY_STOP"),
+    // : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP, "EMERGENCY_STOP"),
+    : BehaviorStateMachine(STATE_TYPE::EMERGENCY_STOP),
     avoidance_flag_(false) {}
   virtual ~EmergencyStopState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
@@ -231,7 +240,8 @@ class NormalTerminationState : public BehaviorStateMachine
 {
 public:
   NormalTerminationState()
-    : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION, "NORMAL_TERMINATION") {}
+    // : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION, "NORMAL_TERMINATION") {}
+    : BehaviorStateMachine(STATE_TYPE::NORMAL_TERMINATION) {}
   virtual ~NormalTerminationState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -247,7 +257,8 @@ class AbnormalTerminationState : public BehaviorStateMachine
 {
 public:
   AbnormalTerminationState()
-    : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION, "ABNORMAL_TERMINATION") {}
+    // : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION, "ABNORMAL_TERMINATION") {}
+    : BehaviorStateMachine(STATE_TYPE::ABNORMAL_TERMINATION) {}
   virtual ~AbnormalTerminationState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
@@ -263,7 +274,8 @@ class RecoveryState : public BehaviorStateMachine
 {
 public:
   RecoveryState()
-    : BehaviorStateMachine(STATE_TYPE::RECOVERY, "RECOVERY"),
+    // : BehaviorStateMachine(STATE_TYPE::RECOVERY, "RECOVERY"),
+    : BehaviorStateMachine(STATE_TYPE::RECOVERY),
     avoidance_success_(false),
     previous_line_detected_(false),
     line_not_detected_time_(0),
