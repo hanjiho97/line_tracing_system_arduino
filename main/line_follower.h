@@ -19,6 +19,7 @@ public:
   void go_straight();
   void turn_left();
   void turn_right();
+  void go_back();
 
   inline MotorOutput get_motor_output()
   {

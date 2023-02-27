@@ -80,20 +80,6 @@ enum STATE_TYPE
   NUM_STATES
 };
 
-// const std::string STATE_STR[] = 
-// {
-//   "INIT",
-//   "STOP",
-//   "LINE_FOLLOW",
-//   "OBSTACLE_AVOIDANCE",
-//   "COLLISION",
-//   "SYSTEM_FAULT",
-//   "EMERGENCY_STOP",
-//   "NORMAL_TERMINATION",
-//   "ABNORMAL_TERMINATION",
-//   "RECOVERY"
-// };
-
 struct SensorData
 {
   SensorData()
@@ -115,19 +101,6 @@ struct SensorData
 struct MotorOutput
 {
   MotorOutput()
-    : right_motor_speed_(0)
-    , left_motor_speed_(0)
-    , right_motor_mode_(RELEASE)
-    , left_motor_mode_(RELEASE) {}
-  uint8_t right_motor_speed_;
-  uint8_t left_motor_speed_;
-  uint8_t right_motor_mode_;
-  uint8_t left_motor_mode_;
-};
-
-struct DisplayOutput
-{
-  DisplayOutput()
     : right_motor_speed_(0)
     , left_motor_speed_(0)
     , right_motor_mode_(RELEASE)
