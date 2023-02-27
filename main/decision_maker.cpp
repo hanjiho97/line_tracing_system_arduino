@@ -72,14 +72,14 @@ void DecisionMaker::read_sensor_data()
 
 bool DecisionMaker::check_sensor_data()
 {
-  if ((sensor_data_.ir_value_ > 1000) || (sensor_data_.collision_value_ > 1000))
-  {
-    return false;
-  }
-  else
-  {
-    return true;
-  }
+  // if ((sensor_data_.ir_value_ > 1000) || (sensor_data_.collision_value_ > 1000))
+  // {
+  //   return false;
+  // }
+  // else
+  // {
+  return true;
+  // }
 }
 
 void DecisionMaker::write_control_signal(const MotorOutput& motor_output)

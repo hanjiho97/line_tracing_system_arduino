@@ -10,19 +10,19 @@
 #define INIT_SPEED 150
 
 // line sensors
-#define LEFT_LINE_SENSOR_PIN 2
-#define RIGHT_LINE_SENSOR_PIN 3
+#define LEFT_LINE_SENSOR_PIN 3
+#define RIGHT_LINE_SENSOR_PIN 2
 
 // ir sensor
 #define IR_SENSOR_PIN A0
-#define IR_DETECTED_THRESHOLD 500
+#define IR_DETECTED_THRESHOLD 400
 
 // collision sensor
 #define COLLISION_SENSOR_PIN A1
-#define COLLISION_DETECTED_THRESHOLD 600
+#define COLLISION_DETECTED_THRESHOLD 700
 
 // motors
-#define RIGHT_MOTOR_NUMBER 3
+#define RIGHT_MOTOR_NUMBER 1
 #define LEFT_MOTOR_NUMBER 4
 
 #define DISPLAY_SDA_PIN A4
@@ -33,7 +33,7 @@
 #define NUMBER_OF_SAMPLES 10
 
 // motor control parameters
-#define HIGH_MOTOR_SPEED 200
+#define HIGH_MOTOR_SPEED 250
 #define LOW_MOTOR_SPEED 200
 
 // state related paramters

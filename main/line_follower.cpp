@@ -103,8 +103,8 @@ void LineFollower::turn_right()
 {
   motor_output_.right_motor_speed_ = LOW_MOTOR_SPEED;
   motor_output_.left_motor_speed_ = LOW_MOTOR_SPEED;
-  motor_output_.right_motor_mode_ = FORWARD;
-  motor_output_.left_motor_mode_ = BACKWARD;
+  motor_output_.right_motor_mode_ = BACKWARD;
+  motor_output_.left_motor_mode_ = FORWARD;
   previous_direction = DIRECTION::RIGHT;
 }
 
@@ -112,7 +112,7 @@ void LineFollower::turn_left()
 {
   motor_output_.right_motor_speed_ = LOW_MOTOR_SPEED;
   motor_output_.left_motor_speed_ = LOW_MOTOR_SPEED;
-  motor_output_.right_motor_mode_ = BACKWARD;
-  motor_output_.left_motor_mode_ = FORWARD;
+  motor_output_.right_motor_mode_ = FORWARD;
+  motor_output_.left_motor_mode_ = BACKWARD;
   previous_direction = DIRECTION::LEFT;
 }
