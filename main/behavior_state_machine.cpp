@@ -95,7 +95,7 @@ STATE_TYPE StopState::get_next_state(DecisionMaker& decision_maker)
   {
     if (sensor_data_.ir_value_ < IR_DETECTED_THRESHOLD)
     {
-        return find_behavior_state(behavior_state_);
+      return find_behavior_state(behavior_state_);
     }
     else
     {
@@ -104,7 +104,7 @@ STATE_TYPE StopState::get_next_state(DecisionMaker& decision_maker)
   }
   else
   {
-    return find_behavior_state(behavior_state_);
+    return find_behavior_state(STATE_TYPE::RECOVERY);
   }
 }
 
@@ -124,35 +124,8 @@ bool StopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 /*****************************************************************************************/
 STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
 {
-  // sensor_data_ = decision_maker.get_sensor_data();
-  // measure_line_not_detected_time();
-  // if (sensor_data_.collision_value_ > COLLISION_DETECTED_THRESHOLD)
-  // {
-  //   return find_behavior_state(STATE_TYPE::COLLISION);
-  // }
-  // else if (sensor_data_.ir_value_ < IR_DETECTED_THRESHOLD)
-  // {
-  //   if (exist_line() == true)
-  //   {
-  //     return find_behavior_state(STATE_TYPE::STOP);
-  //   }
-  //   else
-  //   {
-  //     return find_behavior_state(behavior_state_);
-  //   }
-  // }
-  // else
-  // {
-  //   if (line_not_detected_time_ > RECOVERY_NONE_LINE_LIMIT_TIME_MS)
-  //   {
-  //     return find_behavior_state(STATE_TYPE::RECOVERY);
-  //   }
-  //   else
-  //   {
-  //     return find_behavior_state(behavior_state_);
-  //   }
-  // }
   sensor_data_ = decision_maker.get_sensor_data();
+  measure_line_not_detected_time();
   if (sensor_data_.collision_value_ > COLLISION_DETECTED_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
@@ -170,7 +143,14 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
   }
   else
   {
-    return find_behavior_state(behavior_state_);
+    if (line_not_detected_time_ > RECOVERY_NONE_LINE_LIMIT_TIME_MS)
+    {
+      return find_behavior_state(STATE_TYPE::RECOVERY);
+    }
+    else
+    {
+      return find_behavior_state(behavior_state_);
+    }
   }
 }
 
@@ -278,7 +258,7 @@ STATE_TYPE RecoveryState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
   
-  if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
+  if (sensor_data_.collision_value_ > COLLISION_DETECTED_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
   }

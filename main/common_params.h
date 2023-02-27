@@ -38,7 +38,7 @@
 
 // state related paramters
 #define START_WAIT_TIME_MS 5000
-#define RECOVERY_NONE_LINE_LIMIT_TIME_MS 5000
+#define RECOVERY_NONE_LINE_LIMIT_TIME_MS 1000
 
 // avoidance
 #define FIRST_CHECKPOINT_TIME_MS 1000

@@ -23,33 +23,6 @@ public:
   {
     return sensor_data_;
   }
-  // void display_current_state(LiquidCrystal_I2C &lcd)
-  // {
-  //   std::string state;
-  //   switch (current_state_)
-  //   {
-  //   case STATE_TYPE::INIT:
-  //     state = "INIT_STATE";
-  //     break;
-  //   case STATE_TYPE::STOP:
-  //     state = "STOP_STATE";
-  //     break;
-  //   case STATE_TYPE::LINE_FOLLOW:
-  //     state = "LINE_FOLLOW_STATE";
-  //     break;
-  //   case STATE_TYPE::COLLISION:
-  //     state = "COLLISION_STATE";
-  //     break;
-  //   case STATE_TYPE::SYSTEM_FAULT:
-  //     state = "SYSTEM_FAULT_STATE";
-  //     break;
-  //   default:
-  //     break;
-  //   }
-
-  //   lcd.setCursor(0, 0);
-  //   lcd.print(state.c_str());
-  // }
 
 protected:
   void init_motors();
@@ -61,6 +34,7 @@ protected:
   STATE_TYPE current_state_;
   std::vector<BehaviorStateMachine*> states_;
   SensorData sensor_data_;
+  int32_t fault_count = 0;
 
   AF_DCMotor* right_motor_;
   AF_DCMotor* left_motor_;

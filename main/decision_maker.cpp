@@ -20,6 +20,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   // define edges of STOP_STATE
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
   // define edges of LINE_FOLLOW_STATE
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -72,14 +73,24 @@ void DecisionMaker::read_sensor_data()
 
 bool DecisionMaker::check_sensor_data()
 {
-  // if ((sensor_data_.ir_value_ > 1000) || (sensor_data_.collision_value_ > 1000))
-  // {
-  //   return false;
-  // }
-  // else
-  // {
-  return true;
-  // }
+  if ((sensor_data_.ir_value_ > 1000) || (sensor_data_.collision_value_ > 1000))
+  {
+    fault_count +=1;
+  }
+  else
+  {
+    fault_count = 0;
+  }
+  
+  if (fault_count > 100)
+  {
+    fault_count = 0;
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 void DecisionMaker::write_control_signal(const MotorOutput& motor_output)
