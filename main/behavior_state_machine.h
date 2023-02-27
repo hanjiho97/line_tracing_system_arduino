@@ -86,19 +86,30 @@ class LineFollowState : public BehaviorStateMachine
 {
 public:
   LineFollowState()
+    // : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW, "LINE_FOLLOW"),
     : BehaviorStateMachine(STATE_TYPE::LINE_FOLLOW),
-    avoidance_success_(false) {}
+    avoidance_success_(false),
+    previous_line_detected_(false),
+    line_not_detected_time_(0),
+    line_not_detected_start_time_(0) {}
   virtual ~LineFollowState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
   virtual void reset_parameters()
   {
     avoidance_success_ = false;
+    previous_line_detected_ = false;
+    line_not_detected_time_ = 0;
+    line_not_detected_start_time_ = 0;
   }
+  void measure_line_not_detected_time();
   bool exist_line();
 
 private:
   bool avoidance_success_;
+  bool previous_line_detected_;
+  uint32_t line_not_detected_time_;
+  uint32_t line_not_detected_start_time_;
 
   LineFollower line_follower_;
 };
@@ -154,29 +165,12 @@ class RecoveryState : public BehaviorStateMachine
 public:
   RecoveryState()
     // : BehaviorStateMachine(STATE_TYPE::RECOVERY, "RECOVERY"),
-    : BehaviorStateMachine(STATE_TYPE::RECOVERY),
-    avoidance_success_(false),
-    previous_line_detected_(false),
-    line_not_detected_time_(0),
-    line_not_detected_start_time_(0) {}
+    : BehaviorStateMachine(STATE_TYPE::RECOVERY) {}
   virtual ~RecoveryState() {}
   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
-  virtual void reset_parameters()
-  {
-    avoidance_success_ = false;
-    previous_line_detected_ = false;
-    line_not_detected_time_ = 0;
-    line_not_detected_start_time_ = 0;
-  }
-  void measure_line_not_detected_time();
+  virtual void reset_parameters() {}
   bool exist_line();
-
-private:
-  bool avoidance_success_;
-  bool previous_line_detected_;
-  uint32_t line_not_detected_time_;
-  uint32_t line_not_detected_start_time_;
 };
 
 #endif

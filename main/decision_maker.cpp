@@ -12,6 +12,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::LINE_FOLLOW] = new LineFollowState;
   states_[STATE_TYPE::COLLISION] = new CollisionState;
   states_[STATE_TYPE::SYSTEM_FAULT] = new SystemFaultState;
+  states_[STATE_TYPE::RECOVERY] = new RecoveryState;
 
   // define edges of INIT_STATE
   states_[STATE_TYPE::INIT]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -23,6 +24,11 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   // define edges of LINE_FOLLOW_STATE
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::STOP]);
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
+
+  // define edges of RECOVERY_STATE
+  states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
+  states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::COLLISION]);
 }
 
 DecisionMaker::~DecisionMaker()

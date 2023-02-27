@@ -125,6 +125,7 @@ bool StopState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
 STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
+  measure_line_not_detected_time();
   if (sensor_data_.collision_value_ > COLLISION_DETECTED_THRESHOLD)
   {
     return find_behavior_state(STATE_TYPE::COLLISION);
@@ -142,7 +143,14 @@ STATE_TYPE LineFollowState::get_next_state(DecisionMaker& decision_maker)
   }
   else
   {
-    return find_behavior_state(behavior_state_);
+    if (line_not_detected_time_ > RECOVERY_NONE_LINE_LIMIT_TIME_MS)
+    {
+      return find_behavior_state(STATE_TYPE::RECOVERY);
+    }
+    else
+    {
+      return find_behavior_state(behavior_state_);
+    }
   }
 }
 
@@ -162,6 +170,31 @@ bool LineFollowState::exist_line()
     return true;
   else
     return false;
+}
+
+void LineFollowState::measure_line_not_detected_time()
+{
+  if (exist_line() == false)
+  {
+    // firstly not detected
+    if (previous_line_detected_)
+    {
+      line_not_detected_start_time_ = millis();
+      line_not_detected_time_ = 0;
+      previous_line_detected_ = false;
+    }
+    // continuously not detected
+    else
+    {
+      // update not detected time
+      line_not_detected_time_ = millis() - line_not_detected_start_time_;
+    }
+  }
+  else
+  {
+    line_not_detected_time_ = 0;
+    previous_line_detected_ = true;
+  }
 }
 
 /*****************************************************************************************/
@@ -224,7 +257,19 @@ bool CollisionState::run(DecisionMaker& decision_maker, MotorOutput& motor_outpu
 STATE_TYPE RecoveryState::get_next_state(DecisionMaker& decision_maker)
 {
   sensor_data_ = decision_maker.get_sensor_data();
-  measure_line_not_detected_time();
+  
+  if (sensor_data_.collision_value_ < COLLISION_DETECTED_THRESHOLD)
+  {
+    return find_behavior_state(STATE_TYPE::COLLISION);
+  }
+  else if (exist_line() == true)
+  {
+    return find_behavior_state(STATE_TYPE::LINE_FOLLOW);
+  }
+  else
+  {
+    return find_behavior_state(behavior_state_);
+  }  
 }
 
 bool RecoveryState::run(DecisionMaker& decision_maker, MotorOutput& motor_output)
@@ -243,29 +288,4 @@ bool RecoveryState::exist_line()
     return true;
   else
     return false;
-}
-
-void RecoveryState::measure_line_not_detected_time()
-{
-  if (exist_line() == false)
-  {
-    // firstly not detected
-    if (previous_line_detected_)
-    {
-      line_not_detected_start_time_ = millis();
-      line_not_detected_time_ = 0;
-      previous_line_detected_ = false;
-    }
-    // continuously not detected
-    else
-    {
-      // update not detected time
-      line_not_detected_time_ = millis() - line_not_detected_start_time_;
-    }
-  }
-  else
-  {
-    line_not_detected_time_ = 0;
-    previous_line_detected_ = true;
-  }
 }
