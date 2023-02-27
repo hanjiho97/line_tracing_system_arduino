@@ -3,6 +3,8 @@
 
 #include <ArduinoSTL.h>
 #include <vector>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 #include "behavior_state_machine.h"
 #include "common_params.h"
@@ -20,6 +22,33 @@ public:
   SensorData& get_sensor_data()
   {
     return sensor_data_;
+  }
+  void display_current_state(LiquidCrystal_I2C &lcd)
+  {
+    std::string state;
+    switch (current_state_)
+    {
+    case STATE_TYPE::INIT:
+      state = "INIT_STATE";
+      break;
+    case STATE_TYPE::STOP:
+      state = "STOP_STATE";
+      break;
+    case STATE_TYPE::LINE_FOLLOW:
+      state = "LINE_FOLLOW_STATE";
+      break;
+    case STATE_TYPE::COLLISION:
+      state = "COLLISION_STATE";
+      break;
+    case STATE_TYPE::SYSTEM_FAULT:
+      state = "SYSTEM_FAULT_STATE";
+      break;
+    default:
+      break;
+    }
+
+    lcd.setCursor(0, 0);
+    lcd.print(state.c_str());
   }
 
 protected:

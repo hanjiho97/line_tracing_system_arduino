@@ -103,27 +103,80 @@ private:
   LineFollower line_follower_;
 };
 
-// /*****************************************************************************************/
-// /*****************************************************************************************/
-// /******************************** SystemFaultState ***************************************/
-// /*****************************************************************************************/
-// /*****************************************************************************************/
-// class SystemFaultState : public BehaviorStateMachine
-// {
-// public:
-//   SystemFaultState()
-//     // : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT, "SYSTEM_FAULT"), fault_count_(0) {}
-//     : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count_(0) {}
-//   virtual ~SystemFaultState() {}
-//   virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
-//   virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
-//   virtual void reset_parameters()
-//   {
-//     fault_count_ = 0;
-//   }
+/*****************************************************************************************/
+/*****************************************************************************************/
+/******************************** SystemFaultState ***************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class SystemFaultState : public BehaviorStateMachine
+{
+public:
+  SystemFaultState()
+    : BehaviorStateMachine(STATE_TYPE::SYSTEM_FAULT), fault_count_(0) {}
+  virtual ~SystemFaultState() {}
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters()
+  {
+    fault_count_ = 0;
+  }
 
-// private:
-//   uint8_t fault_count_;
-// };
+private:
+  uint8_t fault_count_;
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/********************************* CollisionState ****************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class CollisionState : public BehaviorStateMachine
+{
+public:
+  CollisionState()
+    // : BehaviorStateMachine(STATE_TYPE::COLLISION, "COLLISION")
+    : BehaviorStateMachine(STATE_TYPE::COLLISION)
+  {
+  }
+  virtual ~CollisionState() {}
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters() {}
+};
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/******************************** RecoveryState ************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+class RecoveryState : public BehaviorStateMachine
+{
+public:
+  RecoveryState()
+    // : BehaviorStateMachine(STATE_TYPE::RECOVERY, "RECOVERY"),
+    : BehaviorStateMachine(STATE_TYPE::RECOVERY),
+    avoidance_success_(false),
+    previous_line_detected_(false),
+    line_not_detected_time_(0),
+    line_not_detected_start_time_(0) {}
+  virtual ~RecoveryState() {}
+  virtual STATE_TYPE get_next_state(DecisionMaker& decision_maker);
+  virtual bool run(DecisionMaker& decision_maker, MotorOutput& motor_output);
+  virtual void reset_parameters()
+  {
+    avoidance_success_ = false;
+    previous_line_detected_ = false;
+    line_not_detected_time_ = 0;
+    line_not_detected_start_time_ = 0;
+  }
+  void measure_line_not_detected_time();
+  bool exist_line();
+
+private:
+  bool avoidance_success_;
+  bool previous_line_detected_;
+  uint32_t line_not_detected_time_;
+  uint32_t line_not_detected_start_time_;
+};
 
 #endif

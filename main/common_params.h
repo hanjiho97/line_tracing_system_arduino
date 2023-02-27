@@ -19,7 +19,7 @@
 
 // collision sensor
 #define COLLISION_SENSOR_PIN A1
-#define COLLISION_DETECTED_THRESHOLD 500
+#define COLLISION_DETECTED_THRESHOLD 600
 
 // motors
 #define RIGHT_MOTOR_NUMBER 1
@@ -33,8 +33,8 @@
 #define NUMBER_OF_SAMPLES 10
 
 // motor control parameters
-#define HIGH_MOTOR_SPEED 250
-#define LOW_MOTOR_SPEED 200
+#define HIGH_MOTOR_SPEED 200
+#define LOW_MOTOR_SPEED 150
 
 // state related paramters
 #define START_WAIT_TIME_MS 5000
@@ -66,16 +66,12 @@ enum DIRECTION
 enum STATE_TYPE
 {
   INVALID_STATE = -1,
-  INIT = 0,
-  STOP = 1, // main decision state
-  LINE_FOLLOW = 2,
-  OBSTACLE_AVOIDANCE = 3,
-  COLLISION = 4,
-  SYSTEM_FAULT = 5,
-  EMERGENCY_STOP = 6,
-  NORMAL_TERMINATION = 7,
-  ABNORMAL_TERMINATION = 8,
-  RECOVERY = 9,
+  INIT,
+  STOP, // main decision state
+  LINE_FOLLOW,
+  COLLISION,
+  SYSTEM_FAULT,
+  RECOVERY,
   NUM_STATES
 };
 
