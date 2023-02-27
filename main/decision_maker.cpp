@@ -3,6 +3,7 @@
 DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
     : current_state_(initial_state), states_(STATE_TYPE::NUM_STATES)
 {
+  std::cout << "Decision Maker Constructor" << std::endl;
   init_sensor_pin();
   init_motors();
 
@@ -25,6 +26,7 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::OBSTACLE_AVOIDANCE]);
   states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::STOP]->insert_next_state(states_[STATE_TYPE::ABNORMAL_TERMINATION]);
 
   // define edges of LINE_FOLLOW_STATE
   states_[STATE_TYPE::LINE_FOLLOW]->insert_next_state(states_[STATE_TYPE::STOP]);
@@ -36,9 +38,9 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::STOP]);
   states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::EMERGENCY_STOP]);
   states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::COLLISION]);
+  states_[STATE_TYPE::OBSTACLE_AVOIDANCE]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
   // define edges of COLLISION_STATE
-  states_[STATE_TYPE::COLLISION]->insert_next_state(states_[STATE_TYPE::COLLISION]);
   states_[STATE_TYPE::COLLISION]->insert_next_state(states_[STATE_TYPE::NORMAL_TERMINATION]);
 
   // define edges of SYSTEM_FAULT_STATE
@@ -46,12 +48,15 @@ DecisionMaker::DecisionMaker(const STATE_TYPE initial_state)
   states_[STATE_TYPE::SYSTEM_FAULT]->insert_next_state(states_[STATE_TYPE::ABNORMAL_TERMINATION]);
 
   // define edges of EMERGENCY_STOP_STATE
+  states_[STATE_TYPE::EMERGENCY_STOP]->insert_next_state(states_[STATE_TYPE::COLLISION]);
   states_[STATE_TYPE::EMERGENCY_STOP]->insert_next_state(states_[STATE_TYPE::RECOVERY]);
 
   // define deges of RECOVERY
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::LINE_FOLLOW]);
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::COLLISION]);
   states_[STATE_TYPE::RECOVERY]->insert_next_state(states_[STATE_TYPE::STOP]);
+
+  std::cout << "Decision Maker Done" << std::endl;
 }
 
 DecisionMaker::~DecisionMaker()
@@ -88,9 +93,16 @@ void DecisionMaker::read_sensor_data()
 {
   sensor_data_.line_tracing_right_ = digitalRead(RIGHT_LINE_SENSOR_PIN) * 1000;
   sensor_data_.line_tracing_left_ = digitalRead(LEFT_LINE_SENSOR_PIN) * 1000;
-  sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
-  sensor_data_.collision_value_ = analogRead(COLLISION_SENSOR_PIN); // TODO
+  // sensor_data_.ir_value_ = digitalRead(IR_SENSOR_PIN);
+  sensor_data_.ir_value_ = -1;
+  // sensor_data_.collision_value_ = analogRead(COLLISION_SENSOR_PIN); // TODO
+  sensor_data_.collision_value_ = 2000; // TODO
   sensor_data_.read_time_ = millis();
+
+  // std::cout << sensor_data_.line_tracing_left_ << ", " 
+  //           << sensor_data_.line_tracing_right_ << ", "
+  //           << sensor_data_.ir_value_ << ", " 
+  //           << sensor_data_.read_time_ << std::endl;
 }
 
 bool DecisionMaker::check_sensor_data()
@@ -151,11 +163,21 @@ void DecisionMaker::run()
   }
 
   MotorOutput motor_output;
+  // states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output);
+
+  // if (states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output))
+  //   // std::cout << "Run Success: " << STATE_STR[new_state] << std::endl;
+  //   std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
+  // else
+  //   std::cout << "Run Failure: " << static_cast<uint32_t>(current_state_) << std::endl;
+
   if (states_[static_cast<uint32_t>(current_state_)]->run(*this, motor_output))
-    std::cout << "Run Success: " << STATE_STR[new_state] << std::endl;
-    // std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
+
+    // std::cout << "Run Success: " << STATE_STR[new_state] << std::endl;
+    std::cout << "Run Success: " << static_cast<uint32_t>(current_state_) << std::endl;
   else
     std::cout << "Run Failure: " << static_cast<uint32_t>(current_state_) << std::endl;
+
 
   write_control_signal(motor_output);
 }

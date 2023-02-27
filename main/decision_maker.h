@@ -22,6 +22,11 @@ public:
     return sensor_data_;
   }
 
+  std::string get_current_state_name()
+  {
+    return states_[static_cast<uint32_t>(current_state_)]->get_state_name();
+  }
+
 protected:
   void init_motors();
   void init_sensor_pin();
